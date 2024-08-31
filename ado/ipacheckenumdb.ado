@@ -213,9 +213,9 @@ program ipacheckenumdb, rclass
 		#d;
 		collapse (first)    team 			= `tmv_team'
 				 (count) 	submissions 	= `tmv_obs'
-				 (min)	 	duration_min   	= `tmv_dur'
 				 (mean)	 	duration_mean   = `tmv_dur'
 				 (median) 	duration_median = `tmv_dur'
+				 (min)	 	duration_min   	= `tmv_dur'
 				 (max)	 	duration_max   	= `tmv_dur'
 				 ,
 				 by(`enumerator')
@@ -225,9 +225,9 @@ program ipacheckenumdb, rclass
 		*label variables
 		lab var team 			"team"
 		lab var submissions 	"# of submissions"
-		lab var duration_min   	"min duration"
 		lab var duration_mean   "mean duration"
 		lab var duration_median "median duration"
+		lab var duration_min   	"min duration"
 		lab var duration_max   	"max duration"
 		
 		* drop consent, dk, ref, other, duration
