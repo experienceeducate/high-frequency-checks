@@ -21,71 +21,63 @@ program ipacheckoutliers, rclass
 	#d cr
 
 	qui {
-	    
+		
 		preserve
-
-		tempvar tmv_flag tmv_dups
 		
-		* set default insheet values
-		if "`sheet'" == "" loc sheet "outliers"
-		
-		* set default outsheet values
-		if "`outsheet'" == "" loc outsheet "outliers"
+		* Identify all categorical variables (variables with value labels)
+		ds, has(type numeric)
+		local num_vars `r(varlist)'
 
-		* import input data	
-		import excel using "`using'", clear sheet("`sheet'") first case(l) allstr
-
-		* check for duplicates in variable comlumn
-		drop if missing(variable)
-		cap isid variable
-		if _rc == 459 {
-			duplicates tag variable, gen (`tmv_dups')
-			di as err "Duplicates found in inputs sheet:"
-			noi list variable by method multiplier combine if dups
-			exit 459 
-		}
+		* Identify all categorical variables (variables with value labels)
+		ds, has(vallabel)
+		local cat_vars `r(varlist)'
 		
-		* check and insert optionally needed required columns
-		foreach var in by method multiplier combine keep {
-			cap confirm var `var'
-			if _rc == 111 {
-				gen `var' = ""
+		local binary_vars ""
+		
+		* Identify all binary variables
+		foreach var of varlist _all {
+			cap confirm numeric var `var'
+			if !_rc {
+				qui levelsof `var', local(levels)
+				if wordcount("`levels'") == 2 {
+					local binary_vars `binary_vars' `var'
+				}
 			}
 		}
-
-		* save variables, by and keep vars locals
-		levelsof variable, loc (vars) clean
-		levelsof by, loc (byvars) clean
-		levelsof keep, loc(keep) clean
-
-		* keep only relevant vars
-		keep variable by method multiplier combine
-
-		* include default values method and multiplier
-			* if no method is supplied, assume iqr
-			* if no multiplier is supplied, assume 1.5 for iqr & 3 for SD
-
-		replace method = "iqr" if missing(method)
-		replace multiplier = cond(method == "iqr" & missing(multiplier), "1.5", ///
-							 cond(method == "sd" & missing(multiplier), "3", multiplier))
-
-		destring multiplier, replace 
-
-		* check that all multpliers are numeric
-		cap confirm numeric var multiplier
-		if _rc == 7 {
-			disp as err "Multiplier contains non-numeric variables"
-			destring multiplier, force gen(`tmv_flag')
-			gen row = _n, before(variable)
-			noi list row variable method multiplier if mi(`tmv_flag'), abbreviate(32) noobs
-			ex 198
+		
+		* Inititialize standard variables to exclude
+		local exclude_vars duration devicephonenum caseid formdef_version submissiondate starttime endtime
+			
+		* Keep only non-categorical and non-binary numerical variables
+		local cleaned_vars : list num_vars - cat_vars
+		local cleaned_vars : list cleaned_vars - binary_vars
+		local cleaned_vars : list cleaned_vars - exclude_vars
+		local num_cleaned_vars : word count `cleaned_vars'
+		
+		* Create input frame
+		cap frame drop frm_inputs
+		frame create frm_inputs
+		frame frm_inputs {
+			set obs `num_cleaned_vars'
+			generate str32 variable = ""
+			generate str20 by = ""
+			generate str20 method = ""
+			generate int multiplier = .
+			generate str3 combine = ""
 		}
 
+		local i = 1
+		foreach var of local cleaned_vars {
+			frame frm_inputs: replace variable = "`var'" in `i'
+			local i = `i' + 1
+		}
+		  
+		frame frm_inputs: replace by = "enum_name"
+		frame frm_inputs: replace method = "sd"
+		frame frm_inputs: replace multiplier = 3
+		frame frm_inputs: replace combine = "yes"
+		
 		loc cnt `=_N'
-
-		* copy inputs into data frame
-		cap frame drop frm_inputs
-		frames put * , into(frm_inputs)
 
 		restore, preserve 
 		
@@ -107,8 +99,8 @@ program ipacheckoutliers, rclass
 		forval i = 1/`cnt' {
 
 			frames frm_inputs: loc vars`i' = variable[`i']
-			unab vars`i': `vars`i''
-			frames frm_inputs: replace variable = "`vars`i''" in `i'
+			unab vars`i': `cleaned_vars`i''
+			frames frm_inputs: replace variable = "`cleaned_vars`i''" in `i'
 
 			* check that the variable specified is not also a keep var
 			if "`keep'" ~= "" {
