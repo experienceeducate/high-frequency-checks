@@ -212,69 +212,33 @@ program ipacheckenumdb, rclass
 		#d;
 		collapse (first)    team 			= `tmv_team'
 				 (count) 	submissions 	= `tmv_obs'
-				 (mean)  	consent_rate 	= `tmv_consent_yn'
-				 (sum)   	missing_rate   	= `tmv_miss'
-				 (sum)   	dontknow_rate  	= `tmv_dk'
-				 (sum)	 	refuse_rate		= `tmv_ref'
-				 (sum)		other_rate 		= `tmv_other'
-				 (min)	 	duration_min   	= `tmv_dur'
 				 (mean)	 	duration_mean   = `tmv_dur'
 				 (median) 	duration_median = `tmv_dur'
+				 (min)	 	duration_min   	= `tmv_dur'
 				 (max)	 	duration_max   	= `tmv_dur'
-				 (first) 	formversion 	= `tmv_formversion'
-				 (min)   	firstdate 		= `date'
-				 (max)   	lastdate		= `date'
-				 (first) 	days 			= `tmv_days'
 				 ,
 				 by(`enumerator')
-			;
 		#d cr
 		
-		* convert missing_rate to actual rates
-		
-		replace missing_rate 	= missing_rate/(submissions * `vars_count')
-		replace dontknow_rate 	= dontknow_rate/(submissions * `vars_count')
-		replace refuse_rate 	= refuse_rate/(submissions * `vars_count')
-		replace other_rate 		= other_rate/(submissions * `other_count')
-	
 		*label variables
 		lab var team 			"team"
 		lab var submissions 	"# of submissions"
-		lab var consent_rate 	"% of consent"
-		lab var missing_rate   	"% missing"
-		lab var dontknow_rate  	"% dont know"
-		lab var refuse_rate		"% refuse"
-		lab var other_rate		"% other"
 		lab var duration_min   	"min duration"
 		lab var duration_mean   "mean duration"
 		lab var duration_median "median duration"
 		lab var duration_max   	"max duration"
-		lab var formversion 	"# of form versions"
-		lab var firstdate 		"first date"
-		lab var lastdate		"last date"
-		lab var days 			"# of days"
 		
-		* drop consent, dk, ref, other, duration
+		* drop team and duration
 		if !`_team'		drop team
-		if !`_cons' 	drop consent_rate
-		if !`_dk' 		drop dontknow_rate
-		if !`_ref' 		drop refuse_rate
-		if !`_other'	drop other_rate
 		if !`_dur' 		drop duration_*
+		
+		gsort -duration_mean
 
 		ipalabels `enumerator', `nolabel'
-		lab var `enumerator' ""
-
 		export excel using "`outfile'", first(varl) sheet("summary") `sheetreplace' `sheetmodify'
-		ipacolwidth using "`outfile'", sheet("summary")
-		iparowformat using "`outfile'", sheet("summary") type(header)
-		if `_cons' 	ipacolformat using "`outfile'", sheet("summary") vars(consent_rate missing_rate) format("percent_d2")
-		if `_dk' 	ipacolformat using "`outfile'", sheet("summary") vars(dontknow_rate) format("percent_d2")
-		if `_ref' 	ipacolformat using "`outfile'", sheet("summary") vars(refuse_rate) format("percent_d2")
-		if `_other' ipacolformat using "`outfile'", sheet("summary") vars(other_rate) format("percent_d2")
-		if `_dur'   ipacolformat using "`outfile'", sheet("summary") vars(duration_min duration_mean duration_median duration_max) format("number_sep")
-					ipacolformat using "`outfile'", sheet("summary") vars(formversion days) format("number_sep")
-					ipacolformat using "`outfile'", sheet("summary") vars(firstdate lastdate) format("date_d_mon_yy")					
+		cap mata: colwidths("`outfile'", "summary")
+		cap mata: setheader("`outfile'", "summary")
+		if `_dur'   cap mata: colformats("`outfile'", "summary", ("duration_mean", "duration_median", "duration_min", "duration_max"), "number_sep")				
 					
 		*** Summary (by team) ***
 		
