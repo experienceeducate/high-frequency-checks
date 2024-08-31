@@ -1,6 +1,7 @@
-*! version 4.1.0 08apr2024
+*! version 4.1.0 31aug2024
 *! Innovations for Poverty Action
 * ipacheckenumdb: Outputs survey statistics by enumerator
+* modified by matteo ramina
 
 program ipacheckenumdb, rclass
 	
@@ -228,19 +229,21 @@ program ipacheckenumdb, rclass
 		lab var duration_median "median duration"
 		lab var duration_max   	"max duration"
 		
-		* drop team and duration
+		* drop duration
 		if !`_team'		drop team
 		if !`_dur' 		drop duration_*
+
+		ipalabels `enumerator', `nolabel'
+		lab var `enumerator' ""
 		
 		gsort -duration_mean
 
-		ipalabels `enumerator', `nolabel'
 		export excel using "`outfile'", first(varl) sheet("summary") `sheetreplace' `sheetmodify'
-		cap mata: colwidths("`outfile'", "summary")
-		cap mata: setheader("`outfile'", "summary")
-		if `_dur'   cap mata: colformats("`outfile'", "summary", ("duration_mean", "duration_median", "duration_min", "duration_max"), "number_sep")				
+		ipacolwidth using "`outfile'", sheet("summary")
+		iparowformat using "`outfile'", sheet("summary") type(header)
+		if `_dur'   ipacolformat using "`outfile'", sheet("summary") vars(duration_mean duration_median duration_min duration_max) format("number_sep")				
 					
-		*** Summary (by team) ***
+		/**** Summary (by team) ***
 		
 		if `_team' {
 		    
@@ -748,7 +751,7 @@ void format_edb_stats(string scalar file, string scalar sheet, string vector lab
 	}
 	
 	
-	b.close_book()
+	b.close_book()*/
 
 }
 end
