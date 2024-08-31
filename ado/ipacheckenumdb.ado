@@ -1,4 +1,4 @@
-*! version 4.1.0 31aug2024
+*! version 4.1.0 08apr2024
 *! Innovations for Poverty Action
 * ipacheckenumdb: Outputs survey statistics by enumerator
 * modified by matteo ramina
@@ -213,12 +213,13 @@ program ipacheckenumdb, rclass
 		#d;
 		collapse (first)    team 			= `tmv_team'
 				 (count) 	submissions 	= `tmv_obs'
+				 (min)	 	duration_min   	= `tmv_dur'
 				 (mean)	 	duration_mean   = `tmv_dur'
 				 (median) 	duration_median = `tmv_dur'
-				 (min)	 	duration_min   	= `tmv_dur'
 				 (max)	 	duration_max   	= `tmv_dur'
 				 ,
 				 by(`enumerator')
+			;
 		#d cr
 		
 		*label variables
@@ -229,14 +230,12 @@ program ipacheckenumdb, rclass
 		lab var duration_median "median duration"
 		lab var duration_max   	"max duration"
 		
-		* drop duration
+		* drop consent, dk, ref, other, duration
 		if !`_team'		drop team
 		if !`_dur' 		drop duration_*
 
 		ipalabels `enumerator', `nolabel'
 		lab var `enumerator' ""
-		
-		gsort -duration_mean
 
 		export excel using "`outfile'", first(varl) sheet("summary") `sheetreplace' `sheetmodify'
 		ipacolwidth using "`outfile'", sheet("summary")
