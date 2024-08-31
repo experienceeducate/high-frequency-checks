@@ -236,6 +236,8 @@ program ipacheckenumdb, rclass
 
 		ipalabels `enumerator', `nolabel'
 		lab var `enumerator' ""
+		
+		gsort -duration_mean
 
 		export excel using "`outfile'", first(varl) sheet("summary") `sheetreplace' `sheetmodify'
 		ipacolwidth using "`outfile'", sheet("summary")
