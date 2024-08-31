@@ -70,7 +70,7 @@ program ipacheck, rclass
 		}
 		
 		
-		loc url 	= "https://raw.githubusercontent.com/PovertyAction/high-frequency-checks"
+		loc url 	= "https://raw.githubusercontent.com/matteoram/high-frequency-checks"
 
 		if "`subcmd'" == "new" {
 			noi ipacheck_new, surveys(`surveys') folder("`folder'") `subfolders' `filesonly' url("`url'") branch(`branch') `exercise'
@@ -96,7 +96,7 @@ program define ipacheck_update
 		loc branch 	= cond("`branch'" ~= "", "`branch'", "master")
 		noi net install ipacheck, replace from("`url'/`branch'")
 
-		noi net install ipahelper, all replace from("https://raw.githubusercontent.com/PovertyAction/ipahelper/main")
+		noi net install ipahelper, all replace from("https://raw.githubusercontent.com/matteoram/ipahelper/main")
 	}
 	
 end
@@ -234,8 +234,7 @@ program define ipacheck_new
 	if "`filesonly'" == "" {
 		#d;
 		loc folders 
-			""0_archive"
-			"1_instruments"
+			""1_instruments"
 				"1_instruments/1_paper"
 				"1_instruments/2_scto_print"
 				"1_instruments/3_scto_xls"
@@ -246,15 +245,7 @@ program define ipacheck_new
 			"4_data"
 				"4_data/1_preloads"
 				"4_data/2_survey"
-				"4_data/3_backcheck"
-				"4_data/4_monitoring"
-			"5_media"
-				"5_media/1_audio"
-				"5_media/2_images"
-				"5_media/3_video"
-			"6_documentation"
-			"7_field_manager"
-			"8_reports""
+				"4_data/4_monitoring""
 			;
 		#d cr
 		
@@ -282,10 +273,7 @@ program define ipacheck_new
 				"4_data/1_preloads"
 				"4_data/2_survey"
 				"4_data/3_backcheck"
-				"4_data/4_monitoring"
-				"5_media/1_audio"
-				"5_media/2_images"
-				"5_media/3_video""
+				"4_data/4_monitoring""
 				;
 			#d cr
 			
@@ -329,7 +317,7 @@ program define ipacheck_new
 	if "`filesonly'" == "" 	loc exp_dir "`folder'/2_dofiles"
 	else 					loc exp_dir "`folder'"
 	
-	foreach file in 1_globals 3_prepsurvey 4_checksurvey 5_prepbc 6_checkbc {
+	foreach file in 1_globals 3_prepsurvey 4_checksurvey {
 		if `surveys_cnt' > 0 {
 			forval i = 1/`surveys_cnt' {
 				loc exp_file = "`file'_" + word("`surveys'", `i')
@@ -362,7 +350,7 @@ program define ipacheck_new
 	noi disp "Copying files to `folder'/3_checks/1_inputs ..."
 	noi disp
 	
-	foreach file in hfc_inputs corrections specifyrecode {
+	foreach file in hfc_inputs {
 		if `surveys_cnt' > 0 {
 			forval i = 1/`surveys_cnt' {
 				loc exp_file = "`file'_" + word("`surveys'", `i')
@@ -400,14 +388,6 @@ program define ipacheck_new
 		foreach file in household_survey.dta household_backcheck.dta household_preloads.xlsx respondent_targets.xlsx {
 			qui copy "`url'/`branch'/data/`file'" "`folder'/4_data/2_survey/`file'", replace
 			noi disp "`file' copied to 4_data/2_survey/`file'"
-		}
-		
-		qui copy "`url'/`branch'/data/household_backcheck.dta" "`folder'/4_data/3_backcheck/household_backcheck.dta", replace
-		noi disp "household_backcheck.dta copied to 4_data/3_backcheck/household_backcheck.dta"
-
-		foreach file in corrections hfc_inputs specifyrecode {
-			qui copy "`url'/`branch'/excel/exercise/`file'_exercise.xlsm" "`folder'/0_archive/`file'_exercise.xlsm", replace
-			noi disp "`file'_exercise.xlsm copied to 0_archive/`file'_exercise.xlsm"
 		}
 		
 		qui copy "`url'/`branch'/excel/exercise/Household_Survey.xlsx" "`folder'/1_instruments/3_scto_xls/Household_Survey.xlsx", replace
