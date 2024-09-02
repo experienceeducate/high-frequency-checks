@@ -75,46 +75,51 @@ program ipacheckoutliers, rclass
 		frame frm_inputs: replace by = "enum_name"
 		frame frm_inputs: replace method = "sd"
 		frame frm_inputs: replace multiplier = 3
-		frame frm_inputs: replace combine = "yes"
 		
-		loc cnt `=_N'
 
-		restore, preserve 
-		
-		cap confirm var _hfcokay
-		if !_rc {
-		    cap confirm var _hfcokayvar 
-			if !_rc {
-			    loc checkok 1
-				cap frame drop frm_hfcokay
-				frames put `id' _hfcokay _hfcokayvar if _hfcokay == 1, into(frm_hfcokay)
-			}
-			else loc checkok 0
-		}
-		else {
-		    loc checkok 0
-		}
+		local common_prefixes ""
 
-		* expand and replace vars in input sheet
-		forval i = 1/`cnt' {
+		frame frm_inputs {
+			gen str32 common_prefix = ""
+			forvalues i = 1/`=_N' {
+				local var_name = variable[`i']
 
-			frames frm_inputs: loc vars`i' = variable[`i']
-			unab vars`i': `cleaned_vars`i''
-			frames frm_inputs: replace variable = "`cleaned_vars`i''" in `i'
-
-			* check that the variable specified is not also a keep var
-			if "`keep'" ~= "" {
-				loc viol: list vars`i' in keep
-				if `viol' {
-					disp as err "Variables in varlist and keep are mutually exclusive. `vars`i'' is in both"
-					ex 198
+				if regexm("`var_name'", "^(.+?_)\d+$") {
+					local prefix = regexs(1)
+					local common_prefixes `common_prefixes' `prefix'
 				}
 			}
 		}
 
+		local common_prefixes : list uniq common_prefixes
+
+		frame frm_inputs {
+			forvalues i = 1/`=_N' {
+				local var_name = variable[`i']
+				
+				foreach prefix of local common_prefixes {
+					if regexm("`var_name'", "^`prefix'\d+$") {
+						replace common_prefix = "`prefix'" in `i'
+					}
+				}
+			}
+
+			replace common_prefix = common_prefix + "*" if common_prefix != ""
+			replace variable = common_prefix if common_prefix != ""
+			replace combine = "yes" if common_prefix != ""
+			duplicates drop variable, force
+			drop common_prefix
+			
+		}
+		
+		frame frm_inputs: loc cnt = _N
+
+		restore, preserve 
+		
+		* expand and replace vars in input sheet
 
 		* rename and reshape outlier vars
-		unab vars: `vars'
+		unab vars: `cleaned_vars'
 		loc vars: list uniq vars
 		loc i 1
 		foreach var of varlist `vars' {
@@ -132,7 +137,7 @@ program ipacheckoutliers, rclass
 		}
 		
 		* keep only relevant variables
-		keep `id' `enumerator' `date' `keep' `byvars' ovvalue_* ovname_* ovlabel_*
+		keep `id' `enumerator' `date' ovvalue_* ovname_* ovlabel_*
 
 		gen reshape_id = _n
 
@@ -154,9 +159,11 @@ program ipacheckoutliers, rclass
 		gen combine 	= variable
 		gen combine_ind = 0
 		
+*********************************NOTE: code worked up to here, need to handle outliers with combined variables
+		
 		* calculate outliers
 		forval i = 1/`cnt' {
-			frames frm_inputs {
+			frames frm_inputs {œ
 				loc vars`i' 		= variable[`i']
 				loc by`i' 			= by[`i']
 				loc method`i' 		= method[`i']
