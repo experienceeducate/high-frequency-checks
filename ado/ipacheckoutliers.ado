@@ -24,17 +24,16 @@ program ipacheckoutliers, rclass
 		
 		preserve
 		
-		* Identify all categorical variables (variables with value labels)
+		* identify all categorical variables (variables with value labels)
 		ds, has(type numeric)
 		local num_vars `r(varlist)'
 
-		* Identify all categorical variables (variables with value labels)
+		* identify all categorical variables (variables with value labels)
 		ds, has(vallabel)
 		local cat_vars `r(varlist)'
-		
+				
+		* identify all binary variables
 		local binary_vars ""
-		
-		* Identify all binary variables
 		foreach var of varlist _all {
 			cap confirm numeric var `var'
 			if !_rc {
@@ -45,16 +44,16 @@ program ipacheckoutliers, rclass
 			}
 		}
 		
-		* Inititialize standard variables to exclude
+		* inititialize standard variables to exclude
 		local exclude_vars duration devicephonenum caseid formdef_version submissiondate starttime endtime
 			
-		* Keep only non-categorical and non-binary numerical variables
+		* keep only non-categorical and non-binary numerical variables
 		local cleaned_vars : list num_vars - cat_vars
 		local cleaned_vars : list cleaned_vars - binary_vars
 		local cleaned_vars : list cleaned_vars - exclude_vars
 		local num_cleaned_vars : word count `cleaned_vars'
 		
-		* Create input frame
+		* create input frame
 		cap frame drop frm_inputs
 		frame create frm_inputs
 		frame frm_inputs {
@@ -66,19 +65,18 @@ program ipacheckoutliers, rclass
 			generate str3 combine = ""
 		}
 
+		* populate frame
 		local i = 1
 		foreach var of local cleaned_vars {
 			frame frm_inputs: replace variable = "`var'" in `i'
 			local i = `i' + 1
 		}
-		  
 		frame frm_inputs: replace by = "enum_name"
 		frame frm_inputs: replace method = "sd"
-		frame frm_inputs: replace multiplier = 3
-		
+		frame frm_inputs: replace multiplier = 3		
 
+		* identify variables to combine
 		local common_prefixes ""
-
 		frame frm_inputs {
 			gen str32 common_prefix = ""
 			forvalues i = 1/`=_N' {
@@ -90,9 +88,8 @@ program ipacheckoutliers, rclass
 				}
 			}
 		}
-
 		local common_prefixes : list uniq common_prefixes
-
+		local matched_vars ""
 		frame frm_inputs {
 			forvalues i = 1/`=_N' {
 				local var_name = variable[`i']
@@ -100,12 +97,12 @@ program ipacheckoutliers, rclass
 				foreach prefix of local common_prefixes {
 					if regexm("`var_name'", "^`prefix'\d+$") {
 						replace common_prefix = "`prefix'" in `i'
+						local matched_vars `matched_vars' `var_name'
 					}
 				}
+				replace variable = "`matched_vars'" if common_prefix != ""
 			}
-
 			replace common_prefix = common_prefix + "*" if common_prefix != ""
-			replace variable = common_prefix if common_prefix != ""
 			replace combine = "yes" if common_prefix != ""
 			duplicates drop variable, force
 			drop common_prefix
@@ -115,8 +112,6 @@ program ipacheckoutliers, rclass
 		frame frm_inputs: loc cnt = _N
 
 		restore, preserve 
-		
-		* expand and replace vars in input sheet
 
 		* rename and reshape outlier vars
 		unab vars: `cleaned_vars'
@@ -158,12 +153,12 @@ program ipacheckoutliers, rclass
 		gen multiplier 	= .
 		gen combine 	= variable
 		gen combine_ind = 0
-		
-*********************************NOTE: code worked up to here, need to handle outliers with combined variables
+				
+		frame frm_inputs: levelsof by, loc (byvars) clean
 		
 		* calculate outliers
 		forval i = 1/`cnt' {
-			frames frm_inputs {œ
+			frames frm_inputs {
 				loc vars`i' 		= variable[`i']
 				loc by`i' 			= by[`i']
 				loc method`i' 		= method[`i']
@@ -202,7 +197,7 @@ program ipacheckoutliers, rclass
 				replace iqr 			  = viqr 		  if combine == "`vars`i''"
 
 				replace byvar 		= "`by`i''" 		if combine == "`vars`i''" 
-				replace method 		= "`method`i''"		if combine == "`vars`i''"
+				replace method = "`method`i''" if combine == "`vars`i''"
 				replace multiplier 	= `multiplier`i''   if combine == "`vars`i''"
 
 				drop vcount vmin vmax vmean vmedian vsd vp25 vp75 viqr
@@ -262,12 +257,7 @@ program ipacheckoutliers, rclass
 		if `c(N)' > 0 {
 
 			ipagettd `date'
-			
-			gen method_value = cond(method == "iqr", iqr, value_sd)
-			gen range = "Range for " + string(multiplier, "%15.2f") + " * " + method + ///
-						"(" + string(method_value, "%15.2f") + "): " + ///
-						string(range_min, "%15.2f") + " to " + string(range_max, "%15.2f")
-						
+
 			foreach var of varlist _all {
 				lab var `var' "`var'"
 			}
@@ -279,19 +269,16 @@ program ipacheckoutliers, rclass
 			lab var value_min 		"min"
 			lab var value_max 		"max"
 			
-			keep 	`enumerator' `keep' `date' `id'  variable varlabel ///
-					byvar `byvars' combine value value_count value_min value_mean value_max range 
+			keep 	`enumerator' `keep' `date' `id'  variable varlabel value value_mean 
 
-			order 	`enumerator' `keep' `date' `id'  variable varlabel ///
-					byvar `byvars' combine value value_count value_min value_mean value_max range 
+			order 	`enumerator' `keep' `date' `id'  variable varlabel value value_mean 
 					
 			if "`keep'" ~= "" ipalabels `keep', `nolabel'
 			ipalabels `id' `enumerator', `nolabel'
 			export excel using "`outfile'", first(varl) sheet("`outsheet'") `sheetreplace'
 
 			ipacolwidth using "`outfile'", sheet("`outsheet'")
-			ipacolformat using "`outfile'", sheet("`outsheet'") vars(value_min value_mean value_max) format("number_sep_d2")	
-			ipacolformat using "`outfile'", sheet("`outsheet'") vars(value_count) format("number_sep")
+			ipacolformat using "`outfile'", sheet("`outsheet'") vars(value value_mean) format("number_sep_d2")	
 			ipacolformat using "`outfile'", sheet("`outsheet'") vars(`date') format("date_d_mon_yy")
 			iparowformat using "`outfile'", sheet("`outsheet'") type(header)
 			
