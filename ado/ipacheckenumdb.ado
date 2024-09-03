@@ -264,6 +264,7 @@ program ipacheckenumdb, rclass
 		replace submissions = `total_submissions' if _n == _N
 		replace duration_mean = `overall_mean_duration' if _n == _N
 		replace duration_median = `overall_duration_median' if _n == _N
+		drop weighted_duration
 		
 		* export file
 		export excel using "`outfile'", first(varl) sheet("summary") `sheetreplace' `sheetmodify'
