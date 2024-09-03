@@ -245,15 +245,6 @@ program ipacheckoutliers, rclass
 		
 		keep if !inrange(value, range_min, range_max)
 		
-		* drop if already marked as ok
-		if `checkok' {
-		    frame frm_hfcokay: loc okaycnt `c(N)'
-			forval i = 1/`okaycnt' {
-			    loc vars = _frval(frm_hfcokay, _hfcokayvar, `i')
-			    drop if `id' == _frval(frm_hfcokay, `id', `i') & regexm("`vars'", variable)
-			}
-		}
-		
 		if `c(N)' > 0 {
 
 			ipagettd `date'
