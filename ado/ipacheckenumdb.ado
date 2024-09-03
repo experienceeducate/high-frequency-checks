@@ -29,6 +29,8 @@ program ipacheckenumdb, rclass
 	qui {
 	    
 		preserve
+		
+		destring duration, replace
 
 		tempvar tmv_subdate tmv_consent_yn tmv_team tmv_enum
 		tempvar tmv_obs tmv_enum tmv_formversion tmv_days tmv_dur tmv_miss tmv_dk tmv_ref tmv_other 
@@ -192,10 +194,10 @@ program ipacheckenumdb, rclass
 		if !_rc {
 			levelsof `enumerator', loc (enums)
 			foreach enum in `enums' {
-				tab `formversion' 						if `enumerator' == "`enum'"
-				replace `tmv_formversion' 	= `r(r)' 	if `enumerator' == "`enum'"
-				tab `date'								if `enumerator' == "`enum'"
-				replace `tmv_days' 			= `r(r)' 	if `enumerator' == "`enum'"
+				tab `formversion' if `enumerator' == "`enum'"
+				replace `tmv_formversion' 	= `r(r)'  if `enumerator' == "`enum'"
+				tab `date' if `enumerator' == "`enum'"
+				replace `tmv_days' = `r(r)' if `enumerator' == "`enum'"
 			}
 		}
 		else {
@@ -210,25 +212,30 @@ program ipacheckenumdb, rclass
 		
 		gen `tmv_obs' = 1
 		
+		* calculate overall median
+		su duration, detail
+		loc overall_duration_median = r(p50)/60
+		
+		* generate final table
 		#d;
 		collapse (first)    team 			= `tmv_team'
-				 (count) 	submissions 	= `tmv_obs'
 				 (mean)	 	duration_mean   = `tmv_dur'
 				 (median) 	duration_median = `tmv_dur'
 				 (min)	 	duration_min   	= `tmv_dur'
 				 (max)	 	duration_max   	= `tmv_dur'
+				 (count) 	submissions 	= `tmv_obs'
 				 ,
 				 by(`enumerator')
 			;
 		#d cr
 		
-		*label variables
+		* label variables
 		lab var team 			"team"
-		lab var submissions 	"# of submissions"
 		lab var duration_mean   "mean duration"
 		lab var duration_median "median duration"
 		lab var duration_min   	"min duration"
 		lab var duration_max   	"max duration"
+		lab var submissions 	"# of submissions"
 		
 		* drop consent, dk, ref, other, duration
 		if !`_team'		drop team
@@ -237,12 +244,33 @@ program ipacheckenumdb, rclass
 		ipalabels `enumerator', `nolabel'
 		lab var `enumerator' ""
 		
+		* sort in descending order according to mean duration
 		gsort -duration_mean
-
+		
+		* transform durations from seconds to minutes
+		foreach var in duration_mean duration_median duration_min duration_max {
+			replace `var' = `var' / 60
+		}
+		
+		* calculate overall mean duration
+		sum submissions
+		local total_submissions = r(sum)
+		gen weighted_duration = duration_mean * submissions
+		sum weighted_duration
+		local total_weighted_duration = r(sum)
+		local overall_mean_duration = `total_weighted_duration' / `total_submissions'
+		set obs `=_N + 1'
+		replace enum_name = "Overall" if _n == _N
+		replace submissions = `total_submissions' if _n == _N
+		replace duration_mean = `overall_mean_duration' if _n == _N
+		replace duration_median = `overall_duration_median' if _n == _N
+		
+		* export file
 		export excel using "`outfile'", first(varl) sheet("summary") `sheetreplace' `sheetmodify'
 		ipacolwidth using "`outfile'", sheet("summary")
 		iparowformat using "`outfile'", sheet("summary") type(header)
-		if `_dur'   ipacolformat using "`outfile'", sheet("summary") vars(duration_mean duration_median duration_min duration_max) format("number_sep")				
+		if `_dur'   ipacolformat using "`outfile'", sheet("summary") ///
+			vars(duration_mean duration_median duration_min duration_max) format("number_sep")				
 					
 		/**** Summary (by team) ***
 		
