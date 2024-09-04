@@ -8,7 +8,7 @@ program ipacheckmissing, rclass
 
 	#d;
 	syntax 	varlist,
-        	[PRiority(varlist)] 
+        	[DROPvars(varlist)] 
         	OUTFile(string)
         	[show(string)]
         	[OUTSHeet(string)]  
@@ -47,7 +47,7 @@ program ipacheckmissing, rclass
 		frames 	create 	frm_missing 
 				str32  	variable 
 				str80 	label 
-				double  (number_missing percent_missing number_unique) 
+				double  (percent_missing number_missing number_unique) 
 				str3    important_var
 			;
 		#d cr
@@ -78,11 +78,42 @@ program ipacheckmissing, rclass
 			frames post ///
 				frm_missing ("`var'") 				///
 							("`:var lab `var''") 	///
-							(`missing_cnt') 		///
-							(`missing_cnt'/`=_N') 	///
+							(`missing_cnt'/`=_N') 		///
+							(`missing_cnt') 	///
 							(`unique_cnt') 			///
 							("`important_var'")
 		}
+		
+		* drop unnecessary variables
+		loc cto_list "device_info deviceid duration endtime formdef_version" ///
+			"key starttime submissiondate username uuid uuid_confirm caseid" ///
+			"devicephonenum audio_audit"
+		local drop_vars "`dropvars'"
+		loc drop_list ""
+		foreach var of local cto_list {
+			cap confirm var `var' 
+			if _rc == 0 {
+				loc drop_list `drop_list' `var'
+			}
+		}
+		if "`drop_vars'" != "" {
+			foreach var of local drop_vars {
+				cap confirm var `var' 
+				if _rc == 0 {
+					loc drop_list `drop_list' `var'
+				}
+				else {
+					di as err "Warning: Variable `var' not found and not added to drop list."
+				}
+			}
+		}
+		
+		frames frm_missing {
+			foreach var of local drop_list {
+				drop if variable == "`var'"
+			}
+		}
+			
 
 		* export results
 		frames frm_missing {
@@ -102,18 +133,12 @@ program ipacheckmissing, rclass
 			else if "`show'" ~= "" drop if number_missing < `show'
 			
 			* sort data by importance & percent missing
-			gsort -important_var -percent_missing -number_missing variable
+			gsort -percent_missing -number_missing variable
 			
-			lab var number_missing 	"# missing"
 			lab var percent_missing "% missing"
-			lab var important_var 	"priority?"
-			lab var number_unique   "# distinct"
-
-			* convert important_var to string
-			replace important_var = cond(important_var == "1", "yes", "")
+			lab var number_missing 	"# missing"
 			
-			* replace distinct values with missing of all is missing
-			replace number_unique = . if percent_missing == 1
+			drop number_unique important_var
 			
 			* export & format output
 			export excel using "`outfile'", first(varl) sheet("`outsheet'") `sheetmodify' `sheetreplace'
