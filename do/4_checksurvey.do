@@ -27,18 +27,6 @@
 
 	use "${preppedsurvey}", clear
    
-   *======================== Resolve Survey Duplicates =========================* 
-   
-	if $run_corrections {
-		ipacheckcorrections using "${corrfile}",		///
-			sheet("${cr_dupsheet}")						///
-			id(${key}) 									///
-			logfile("${corrlog_output}")				///
-			logsheet("${cr_dupslogsheet}")				///
-			${cr_nolabel}								///
-			${cr_ignore}
-	}
-	
    *========================== Find Survey Duplicates ==========================* 
    
    if $run_ids {
@@ -62,34 +50,6 @@
 		isid ${id}
 		save "${checkedsurvey}", replace
    }
-   
-   *========================== Other HFC Corrections ==========================* 
-   
-   if $run_corrections {		
-		ipacheckcorrections using "${corrfile}", 		///
-			sheet("${cr_othersheet}")					///
-			id(${id}) 									///
-			logfile("${corrlog_output}")				///
-			logsheet("${cr_otherlogsheet}")				///
-			${cr_nolabel}								///
-			${cr_ignore}
-			
-		save "${checkedsurvey}", replace
-	}
-   
-    *========================== Recode other specify ==========================* 
-   
-   if $run_specifyrecode {		
-		ipacheckspecifyrecode using "${recodefile}",	///
-			sheet("${rc_sheet}")						///
-			id($id)										///
-			logfile("${recodelog_output}")				///
-			logsheet("${rc_logsheet}")					///
-			sheetreplace 								///
-			${rc_nolabel}
-			
-		save "${checkedsurvey}", replace
-	}
   
     *============================= Form versions ===============================* 
 
@@ -140,101 +100,6 @@
         	outfile("${hfc_output}") 					///
 			outsheet("outliers")						///
 			${ol_nolabel}								///
-			sheetreplace
-   }
-
-    *============================= Constraints ================================* 
-
-   if $run_constraints {
-		ipacheckconstraints using "${inputfile}",		///
-			id(${id})									///
-			enumerator(${enum}) 						///	
-			date(${date})	 							///
-			sheet("constraints")						///
-        	outfile("${hfc_output}") 					///
-			outsheet("constraints")						///
-			${ct_nolabel}								///
-			sheetreplace
-   }
-
-
-    *================================ Logic ===================================* 
-
-   if $run_logic {
-		ipachecklogic using "${inputfile}",				///
-			id(${id})									///
-			enumerator(${enum}) 						///	
-			date(${date})	 							///
-			sheet("logic")								///
-        	outfile("${hfc_output}") 					///
-			outsheet("logic")							///
-			${cl_nolabel}								///
-			sheetreplace
-   }
-   
-   *============================= Other Specify ===============================* 
-   
-   if $run_specify {
-		ipacheckspecify using "${inputfile}",			///
-			id(${id})									///
-			enumerator(${enum})							///	
-			date(${date})	 							///
-			sheet("other specify")						///
-        	outfile("${hfc_output}") 					///
-			outsheet1("other specify")					///
-			outsheet2("other specify (choices)")		///
-			${os_nolabel}								///
-			sheetreplace
-			
-			loc childvars "`r(childvarlist)'"
-   }
-   
-   *============================ field comments ================================*
-   
-    if $run_comments {
-
-		ipasctocollate comments ${fieldcomments}, 		///
-			folder("${media_folder}")					///
-			save("${commentsdata}")						///
-			replace
-		
-		ipacheckcomments ${fieldcomments},				///
-			enumerator(${enum}) 						///	
-			commentsdata("${commentsdata}")				///
-        	outfile("${hfc_output}") 					///
-			outsheet("field comments")					///
-			keep(${cm_keepvars})						///
-			${cm_nolabel}								///
-			sheetreplace
-   }
-   
-   *======================== text audit & time use ============================* 
-
-   if $run_textaudit | $run_timeuse {
-       ipasctocollate textaudit ${textaudit}, 			///
-			folder("${media_folder}")					///
-			save("${textauditdata}")					///
-			replace
-   }
-
-   if $run_textaudit {
-		ipachecktextaudit ${textaudit},					///
-			enumerator(${enum}) 						///	
-			textauditdata("${textauditdata}")			///
-        	outfile("${textaudit_output}")				///
-			stats("${ta_stats}")						///
-			${ta_nolabel}								///
-			sheetreplace
-			
-   }
-   
-   if $run_timeuse {
-		ipachecktimeuse ${textaudit}, 					///
-			enumerator(${enum})							///	
-			starttime(${starttime})						///
-			textauditdata("${textauditdata}")			///
-        	outfile("${timeuse_output}")				///
-			${tu_nolabel} 								///
 			sheetreplace
    }
    
