@@ -123,13 +123,13 @@
 	
 	* Required Variables:
 	
-	if "${key}" = "" {
+	if "${key}" == "" {
 		gl key "key"
 	}
-	if "${id}" = "" {
+	if "${id}" == "" {
 		gl id "uuid"
 	}
-	if "${enum}" = "" {
+	if "${enum}" == "" {
 		gl key "enum_name"
 	}
 	gl date					"starttime"											
@@ -140,7 +140,9 @@
 	gl starttime 			"starttime"											
 	gl duration				"duration"											
 	gl formversion 			"formdef_version"									
-	gl consent 				""													
+	if "${consent}" == "" {
+		gl consent "consent"
+	}
 
 	
 /* Missing values
