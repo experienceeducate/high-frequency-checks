@@ -314,6 +314,30 @@ program define ipacheck_new
 		noi disp  "{red:Skipped}: File 0_master.do already exists"
 	}
 	
+	copy "0_master.do" "0_master_tmp.do", replace
+	file open master_orig using "0_master.do", read text
+	file open master_new using "0_master_tmp.do", read write text
+	file read master_orig line
+	while r(eof) == 0 {
+		 local line_txt `"`line'"'
+		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
+			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/1_globals.do", "2_dofiles/1_globals_`surveys'.do", .)
+		}
+		else if strpos(`"`line'"', "2_dofiles/3_prepsurvey.do") {
+			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/3_prepsurvey.do", "2_dofiles/3_prepsurvey_`surveys'.do", .)
+		}
+		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
+			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/4_checksurvey.do", "2_dofiles/4_checksurvey_`surveys'.do", .)
+		}
+		file write master_new `"`line_txt'"' _n
+		file read master_orig line
+	}
+	file close master_orig
+	file close master_new
+
+	copy "0_master_tmp.do" "0_master.do", replace
+	erase "0_master_tmp.do"
+	
 	if "`filesonly'" == "" 	loc exp_dir "`folder'/2_dofiles"
 	else 					loc exp_dir "`folder'"
 	
