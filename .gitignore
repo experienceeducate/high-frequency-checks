@@ -277,3 +277,6 @@ TSWLatexianTemp*
 
 # Folder containing test data
 ./0_test/*
+
+# Mac OS files
+.DS_Store
