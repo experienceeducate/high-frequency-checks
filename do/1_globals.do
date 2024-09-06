@@ -23,22 +23,6 @@
 	gl run_enumdb			1	//	Create enumerator Dashboard
 	gl run_tracksurvey		1	// 	Report on survey progress
 	
-/* Input Files
-
-	Description of globals for input files:
-	---------------------------------------
-
-    inputfile		Inputs file for ipacheckoutliers, ipacheckspecify and optional 
-					enumstats inputs for ipacheckenumdb
-
-*/
-*------------------------------------------------------------------------------*
-
-	* NB: Edit this section: Change filenames if neccesary
-	
-	gl inputfile			"${cwd}/3_checks/1_inputs/hfc_inputs.xlsm"			
-	
-
 /* Datasets
 	
 	Description of globals for datasets:
@@ -55,9 +39,9 @@
 	
 	* NB: Edit this section: Change filenames if neccesary
 	
-	gl rawsurvey			"${cwd}/4_data/2_survey/household_survey.dta" 		
-	gl preppedsurvey		"${cwd}/4_data/2_survey/household_survey_prepped.dta"			
-	gl checkedsurvey		"${cwd}/4_data/2_survey/household_survey_checked.dta"
+	gl rawsurvey			"${cwd}/4_data/2_survey/${surveys}.dta" 		
+	gl preppedsurvey		"${cwd}/4_data/2_survey/${surveys}_prepped.dta"			
+	gl checkedsurvey		"${cwd}/4_data/2_survey/${surveys}_checked.dta"
 
 **# Output Date Folder
 *------------------------------------------------------------------------------*	
@@ -139,9 +123,15 @@
 	
 	* Required Variables:
 	
-	gl key					"key"												
-	gl id 					""													
-	gl enum					""
+	if "${key}" = "" {
+		gl key "key"
+	}
+	if "${id}" = "" {
+		gl id "uuid"
+	}
+	if "${enum}" = "" {
+		gl key "enum_name"
+	}
 	gl date					"starttime"											
 	
 	* Optional Variables:

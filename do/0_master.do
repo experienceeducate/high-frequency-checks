@@ -1,5 +1,5 @@
 ********************************************************************************
-** 	TITLE	: 00_master.do
+** 	TITLE	: 0_master.do
 **	PURPOSE	: Master do file
 **  PROJECT	:		
 **	AUTHOR	: 
@@ -30,7 +30,6 @@
 *------------------------------------------------------------------------------*
 
 	do "2_dofiles/1_globals.do"													// globals do-file
-	* do "2_dofiles/2_import_wbnp_hhs_2021.do"									// import do-file
 	do "2_dofiles/3_prepsurvey.do"												// prep survey do-file
 	do "2_dofiles/4_checksurvey.do"												// check survey do-file
 	
