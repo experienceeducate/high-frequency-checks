@@ -336,7 +336,7 @@ program define ipacheck_new
 			
 		}
 		else if strpos(`"`line'"', `"if "$cwd" ~= "" cd "$cwd""') {
-			file write master_new `"        if "\$cwd" ~= "" cd "\$cwd""' _n			
+			file write master_new `"        if "\\$cwd" ~= "" cd "\\$cwd""' _n			
                         
 		}
         else if strpos(`"`line'"', `"else global cwd "`c(pwd)'""') {
