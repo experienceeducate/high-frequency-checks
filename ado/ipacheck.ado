@@ -14,6 +14,10 @@ program ipacheck, rclass
 			[FILESonly] 
 			[EXercise]
 			[BRanch(name) force]
+			[HHID(string)] 
+			[ENUMerator(string)] 
+			[TEAM(string)] 
+			[CONSent(string)]
 			;
 	#d cr
 
@@ -221,7 +225,7 @@ end
 
 program define ipacheck_new
 	
-	syntax, [surveys(string)] [folder(string)] [SUBfolders] [filesonly] [exercise] [branch(name)] url(string)
+	syntax, [surveys(string)] [folder(string)] [SUBfolders] [filesonly] [exercise] [branch(name)] url(string) [HHID(string)] [ENUMerator(string)] [TEAM(string)] [CONSent(string)]
 	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
@@ -229,6 +233,19 @@ program define ipacheck_new
 		loc folder "`c(pwd)'"
 	}
 	
+	if `"`hhid'"' != "" {
+		global id `"`hhid'"'
+	}
+	if `"`enumerator'"' != "" {
+		global enum `"`enumerator'"'
+	}
+	if `"`team'"' != "" {
+		global team `"`team'"'
+	}
+	if `"`consent'"' != "" {
+		global consent `"`consent'"'
+	}
+		
 	loc surveys_cnt = `:word count `surveys''
 	
 	if "`filesonly'" == "" {
