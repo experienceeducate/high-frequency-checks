@@ -314,6 +314,7 @@ program define ipacheck_new
 		noi disp  "{red:Skipped}: File 0_master.do already exists"
 	}
 	
+	* Modify 0_master.do to specify survey file
 	copy "`exp_dir'/0_master.do" "`exp_dir'/0_master_tmp.do", replace
 	file open master_orig using "`exp_dir'/0_master.do", read text
 	file open master_new using "`exp_dir'/0_master_tmp.do", read write text
@@ -322,19 +323,33 @@ program define ipacheck_new
 		 local line_txt `"`line'"'
 		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
 			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/1_globals.do", "2_dofiles/1_globals_`surveys'.do", .)
+			file write master_new `"`line_txt'"' _n			
 		}
 		else if strpos(`"`line'"', "2_dofiles/3_prepsurvey.do") {
 			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/3_prepsurvey.do", "2_dofiles/3_prepsurvey_`surveys'.do", .)
+			file write master_new `"`line_txt'"' _n
+			
 		}
 		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
 			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/4_checksurvey.do", "2_dofiles/4_checksurvey_`surveys'.do", .)
+			file write master_new `"`line_txt'"' _n
+			
 		}
-		file write master_new `"`line_txt'"' _n
+		else if strpos(`"`line'"', `"if "$cwd" ~= "" cd "$cwd""') {
+			file write master_new `"        if "\$cwd" ~= "" cd "\$cwd""' _n			
+                        
+		}
+        else if strpos(`"`line'"', `"else global cwd "`c(pwd)'""') {
+			file write master_new `"        else global cwd "\`c(pwd)'""' _n			
+                        
+		}
+		else {
+			file write master_new `"`line'"' _n
+		}		
 		file read master_orig line
 	}
 	file close master_orig
 	file close master_new
-
 	copy "`exp_dir'/0_master_tmp.do" "`exp_dir'/0_master.do", replace
 	erase "`exp_dir'/0_master_tmp.do"
 	
