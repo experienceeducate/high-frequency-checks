@@ -225,13 +225,9 @@ end
 
 program define ipacheck_new
 	
-<<<<<<< Updated upstream
-	syntax, [surveys(string)] [folder(string)] [SUBfolders] [filesonly] [exercise] [branch(name)] url(string) [HHID(string)] [ENUMerator(string)] [TEAM(string)] [CONSent(string)]
-=======
 	syntax, [surveys(string)] [folder(string)] [SUBfolders] [HHID(string)] ///
 	[ENUMerator(string)] [TEAM(string)] [CONSent(string)] [filesonly] ///
 	[exercise] [branch(name)] url(string)
->>>>>>> Stashed changes
 	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
@@ -343,21 +339,6 @@ program define ipacheck_new
 	file open master_new using "`exp_dir'/0_master_tmp.do", read write text
 	file read master_orig line
 	while r(eof) == 0 {
-<<<<<<< Updated upstream
-		 local line_txt `"`line'"'
-		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
-			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/1_globals.do", "2_dofiles/1_globals_`surveys'.do", .)
-			file write master_new `"`line_txt'"' _n			
-		}
-		else if strpos(`"`line'"', "2_dofiles/3_prepsurvey.do") {
-			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/3_prepsurvey.do", "2_dofiles/3_prepsurvey_`surveys'.do", .)
-			file write master_new `"`line_txt'"' _n
-			
-		}
-		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
-			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/4_checksurvey.do", "2_dofiles/4_checksurvey_`surveys'.do", .)
-			file write master_new `"`line_txt'"' _n
-=======
 		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
 			file write master_new "	    2_dofiles/1_globals_`surveys'.do" _n			
 		}
@@ -367,7 +348,6 @@ program define ipacheck_new
 		}
 		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
 			file write master_new "2_dofiles/4_checksurvey_`surveys'.do" _n
->>>>>>> Stashed changes
 			
 		}
 		else if strpos(`"`line'"', `"if "$cwd" ~= "" cd "$cwd""') {
