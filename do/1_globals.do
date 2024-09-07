@@ -39,9 +39,9 @@
 	
 	* NB: Edit this section: Change filenames if neccesary
 	
-	gl rawsurvey			"${cwd}/4_data/2_survey/${surveys}.dta" 		
-	gl preppedsurvey		"${cwd}/4_data/2_survey/${surveys}_prepped.dta"			
-	gl checkedsurvey		"${cwd}/4_data/2_survey/${surveys}_checked.dta"
+	gl rawsurvey			"${cwd}/4_data/2_survey/household_survey.dta" 		
+	gl preppedsurvey		"${cwd}/4_data/2_survey/household_survey_prepped.dta"			
+	gl checkedsurvey		"${cwd}/4_data/2_survey/household_survey_checked.dta"
 
 **# Output Date Folder
 *------------------------------------------------------------------------------*	
@@ -75,10 +75,6 @@
 
 	gl id_dups_output 		"${cwd}/3_checks/2_outputs/$folder_date/survey_duplicates.dta"
 	gl hfc_output			"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
-	*gl surveydb_output		"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
-	*gl enumdb_output		"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
-	*gl tracking_output      "${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
-
 
 /* Admin variables
 
