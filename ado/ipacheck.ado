@@ -225,7 +225,13 @@ end
 
 program define ipacheck_new
 	
+<<<<<<< Updated upstream
 	syntax, [surveys(string)] [folder(string)] [SUBfolders] [filesonly] [exercise] [branch(name)] url(string) [HHID(string)] [ENUMerator(string)] [TEAM(string)] [CONSent(string)]
+=======
+	syntax, [surveys(string)] [folder(string)] [SUBfolders] [HHID(string)] ///
+	[ENUMerator(string)] [TEAM(string)] [CONSent(string)] [filesonly] ///
+	[exercise] [branch(name)] url(string)
+>>>>>>> Stashed changes
 	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
@@ -337,6 +343,7 @@ program define ipacheck_new
 	file open master_new using "`exp_dir'/0_master_tmp.do", read write text
 	file read master_orig line
 	while r(eof) == 0 {
+<<<<<<< Updated upstream
 		 local line_txt `"`line'"'
 		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
 			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/1_globals.do", "2_dofiles/1_globals_`surveys'.do", .)
@@ -350,6 +357,17 @@ program define ipacheck_new
 		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
 			local line_txt = subinstr(`"`line_txt'"', "2_dofiles/4_checksurvey.do", "2_dofiles/4_checksurvey_`surveys'.do", .)
 			file write master_new `"`line_txt'"' _n
+=======
+		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
+			file write master_new "	    2_dofiles/1_globals_`surveys'.do" _n			
+		}
+		else if strpos(`"`line'"', "2_dofiles/3_prepsurvey.do") {
+			file write master_new "2_dofiles/3_prepsurvey_`surveys'.do" _n
+			
+		}
+		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
+			file write master_new "2_dofiles/4_checksurvey_`surveys'.do" _n
+>>>>>>> Stashed changes
 			
 		}
 		else if strpos(`"`line'"', `"if "$cwd" ~= "" cd "$cwd""') {
@@ -398,6 +416,58 @@ program define ipacheck_new
 			}
 		}
 	}
+	
+	* Modify 1_globals.do to specify survey file
+	copy "`exp_dir'/1_globals_trial4.do" "`exp_dir'/1_globals_trial4_tmp.do", replace
+	file open global_orig using "`exp_dir'/1_globals_trial4.do", read text
+	file open global_new using "`exp_dir'/1_globals_trial4_tmp.do", read write text
+	file read global_orig line
+	while r(eof) == 0 {
+		 if strpos(`"`line'"', "gl rawsurvey") {
+			file write global_new `"	    gl rawsurvey "\${cwd}/4_data/2_survey/`surveys'.dta" "' _n			
+		}
+		else if strpos(`"`line'"', "gl preppedsurvey") {
+			file write global_new `"	    gl preppedsurvey "\${cwd}/4_data/2_survey/`surveys'_prepped.dta" "' _n
+			
+		}
+		else if strpos(`"`line'"', "gl checkedsurvey") {
+			file write global_new `"	    gl checkedsurvey "\${cwd}/4_data/2_survey/`surveys'_checked.dta" "' _n
+			
+		}
+		else if strpos(`"`line'"', "cap mkdir") {
+			file write global_new `"	    cap mkdir        "\${cwd}/3_checks/2_outputs/$folder_date" "' _n
+			
+		}
+		else if strpos(`"`line'"', "gl id_dups_output") {
+			file write global_new `"	    gl id_dups_output        "\${cwd}/3_checks/2_outputs/$folder_date/survey_duplicates.dta" "' _n
+			
+		}
+		else if strpos(`"`line'"', "gl hfc_output") {
+			file write global_new `"	    gl hfc_output        "\${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx" "' _n
+			
+		}
+        else if strpos(`"`line'"', `"gl id"') & `"`hhid'"' != "" {
+			file write global_new 	`"	    gl id "`hhid'""' _n            
+		}
+        else if strpos(`"`line'"', `"gl enum"') & `"`enumerator'"' != "" {
+			file write global_new 	`"	    gl enum "`enumerator'""' _n            
+		}	
+        else if strpos(`"`line'"', `"gl team"') & `"`team'"' != "" {
+			file write global_new 	`"	    gl team "`team'""' _n            
+		}
+        else if strpos(`"`line'"', `"gl consent"') & `"`consent'"' != "" {
+			file write global_new 	`"	    gl consent "`consent'""' _n            
+		}		
+		else {
+			file write global_new `"`line'"' _n
+		}		
+		file read global_orig line
+	}
+	file close global_orig
+	file close global_new
+	copy "`exp_dir'/1_globals_trial4_tmp.do" "`exp_dir'/1_globals_trial4.do", replace
+	erase "`exp_dir'/1_globals_trial4_tmp.do"
+	
 	
 	if "`filesonly'" == "" 	loc exp_dir "`folder'/3_checks/1_inputs"
 	else 					loc exp_dir "`folder'"
