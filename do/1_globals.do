@@ -75,9 +75,9 @@
 
 	gl id_dups_output 		"${cwd}/3_checks/2_outputs/$folder_date/survey_duplicates.dta"
 	gl hfc_output			"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
-	gl surveydb_output		"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
-	gl enumdb_output		"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
-	gl tracking_output      "${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
+	*gl surveydb_output		"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
+	*gl enumdb_output		"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
+	*gl tracking_output      "${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
 
 
 /* Admin variables
@@ -123,26 +123,18 @@
 	
 	* Required Variables:
 	
-	if "${key}" == "" {
-		gl key "key"
-	}
-	if "${id}" == "" {
-		gl id "uuid"
-	}
-	if "${enum}" == "" {
-		gl key "enum_name"
-	}
+	gl key					"key"
+	gl id					"uuid"
+	gl enum 				"enum_name"
 	gl date					"starttime"											
 	
 	* Optional Variables:
 
-	gl team 				""													
+	gl team 				"team"													
 	gl starttime 			"starttime"											
 	gl duration				"duration"											
 	gl formversion 			"formdef_version"									
-	if "${consent}" == "" {
-		gl consent "consent"
-	}
+	gl consent 				"consent"
 
 	
 /* Missing values
