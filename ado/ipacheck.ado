@@ -403,6 +403,10 @@ program define ipacheck_new
 	file open global_new using "`exp_dir'/1_globals_`surveys'_tmp.do", read write text
 	file read global_orig line
 	while r(eof) == 0 {
+		    * Display variables for debugging
+    display "hhid: `hhid'"
+    display "enumerator: `enumerator'"
+    display "team: `team'"
 		 if strpos(`"`line'"', "gl rawsurvey") {
 			file write global_new `"	    gl rawsurvey "\${cwd}/4_data/2_survey/`surveys'.dta" "' _n			
 		}
