@@ -211,7 +211,7 @@ program ipatracksurvey, rclass
 				recode `tmv_survey' `tmv_survey_perc' (. = 0)
 			}
 
-			export excel using "`outfile'", first(varl) sheet("survey progress") replace
+			export excel using "`outfile'", first(varl) sheet("survey progress") sheetreplace
 			ipacolwidth using "`outfile'", sheet("survey progress")
 			iparowformat using "`outfile'", sheet("survey progress") type(header)
 			iparowformat using "`outfile'", sheet("survey progress") type(total)
@@ -348,19 +348,19 @@ program ipatracksurvey, rclass
 		
 			if "`keeplist'" ~= "" ipalabels `keeplist', `nolabel'
 			ipalabels `by', `nolabel'
-			export excel using "`outfile'", first(varl) sheet("summary") replace
+			export excel using "`outfile'", first(varl) sheet("tracking") sheetreplace
 			
-			ipacolwidth using "`outfile'", sheet("summary")
-			iparowformat using "`outfile'", sheet("summary") type(header)
-			iparowformat using "`outfile'", sheet("summary") type(total)
-			ipacolformat using "`outfile'", sheet("summary") vars(`tmv_fdate' `tmv_ldate') format("date_d_mon_yy")
+			ipacolwidth using "`outfile'", sheet("tracking")
+			iparowformat using "`outfile'", sheet("tracking") type(header)
+			iparowformat using "`outfile'", sheet("tracking") type(total)
+			ipacolformat using "`outfile'", sheet("tracking") vars(`tmv_fdate' `tmv_ldate') format("date_d_mon_yy")
 			if "`outcome'" ~= "" {
-			    ipacolformat using "`outfile'", sheet("summary") vars(`tmv_target' `tmv_survey' `tmv_complete') format("number_sep")
-				ipacolformat using "`outfile'", sheet("summary") vars(`tmv_survey_perc' `tmv_complete_perc') format("percent_d2")
+			    ipacolformat using "`outfile'", sheet("tracking") vars(`tmv_target' `tmv_survey' `tmv_complete') format("number_sep")
+				ipacolformat using "`outfile'", sheet("tracking") vars(`tmv_survey_perc' `tmv_complete_perc') format("percent_d2")
 			}
 			else {
-			    ipacolformat using "`outfile'", sheet("summary") vars(`tmv_target' `tmv_survey') format("number_sep")
-				ipacolformat using "`outfile'", sheet("summary") vars(`tmv_survey_perc') format("percent_d2")
+			    ipacolformat using "`outfile'", sheet("tracking") vars(`tmv_target' `tmv_survey') format("number_sep")
+				ipacolformat using "`outfile'", sheet("tracking") vars(`tmv_survey_perc') format("percent_d2")
 			}
 			
 			use "`tmf_input_data'", clear
