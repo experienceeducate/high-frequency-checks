@@ -42,6 +42,7 @@
 	gl rawsurvey			"${cwd}/4_data/2_survey/household_survey.dta" 		
 	gl preppedsurvey		"${cwd}/4_data/2_survey/household_survey_prepped.dta"			
 	gl checkedsurvey		"${cwd}/4_data/2_survey/household_survey_checked.dta"
+	gl mastersurvey 		"${cwd}/4_data/2_survey/household_preloads.xlsx"
 
 **# Output Date Folder
 *------------------------------------------------------------------------------*	
@@ -198,3 +199,4 @@
 *------------------------------------------------------------------------------*
 
 	gl en_period        	"auto"												
+	

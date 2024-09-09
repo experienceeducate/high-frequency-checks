@@ -65,34 +65,20 @@
 				$vs_nolabel
    }
    
-   *========================== Variable Duplicates ============================* 
-   
-   if $run_dups {
-	   ipacheckdups ${dp_vars},							///
-				id(${id})								///
-				enumerator(${enum}) 					///	
-				date(${date})	 						///
-				outfile("${hfc_output}") 				///
-				outsheet("duplicates")					///
-				keep(${dp_keepvars})	 				///
-				${dp_nolabel}							///
-				sheetreplace
-   }
-   
-   *========================= Variable Missingness ============================* 
+   *========================== Variable Missingness ============================* 
    
    if $run_missing {
-		ipacheckmissing ${ms_vars}, 					///
-			priority(${ms_pr_vars})						///
+		ipacheckmissing _all, 							///
+			dropvars(${drop_missing})					///
 			outfile("${hfc_output}") 					///
 			outsheet("missing")							///
 			sheetreplace
    }
-   
+
    *=============================== Outliers ==================================* 
 
    if $run_outliers {
-		ipacheckoutliers using "${inputfile}",			///
+		ipacheckoutliers,								///
 			id(${id})									///
 			enumerator(${enum}) 						///	
 			date(${date})	 							///
@@ -111,13 +97,12 @@
 			enumerator(${enum}) 						///
 			date(${date})								///
 			period("${sv_period}")						///
-			consent(${consent}, ${cons_vals})			///
 			dontknow(.d, ${dk_str})						///
 			refuse(.r, ${ref_str})						///
 			otherspecify("`childvars'")					///
 			duration(${duration})						///
 			formversion(${formversion})					///
-        	outfile("${surveydb_output}")				///
+        	outfile("${hfc_output}")					///
 			${sv_nolabel}								///
 			sheetreplace
    }
@@ -125,19 +110,18 @@
    *========================= Enumerator Dashboard ============================* 
   
    if $run_enumdb {
-		ipacheckenumdb using "${inputfile}",			///
+		ipacheckenumdb,									///
 			sheetname("enumstats")						///		
 			enumerator(${enum})							///
 			team(${team})								///
 			date(${date})								///
 			period("${en_period}")						///
-			consent($consent, ${cons_vals})				///
 			dontknow(.d, ${dk_str})						///
 			refuse(.r, ${ref_str})						///
 			otherspecify("`childvars'")					///
 			duration(${duration})						///
 			formversion(${formversion})					///
-        	outfile("${enumdb_output}")					///
+        	outfile("${hfc_output}")					///
 			${en_nolabel}								///
 			sheetreplace
    }
@@ -149,7 +133,7 @@
 			surveydata("$checkedsurvey")				///
 			id(${id})									///
 			date(${date})								///
-			by(${tr_by})								///
+			by(${enum})									///
 			outcome(${tr_outcome})						///
 			target(${tr_target})						///
 			masterdata("${mastersurvey}")				///
@@ -158,11 +142,9 @@
 			keepmaster(${tr_keepmaster})				///
 			keeptracking(${tr_keeptracking})			///
 			keepsurvey(${tr_keepsurvey})				///
-			outfile("${tracking_output}")				///
+			outfile("${hfc_output}")					///
 			save("${tr_save}")							///
-			${tr_nolabel} 								///
-			${tr_summaryonly}							///
-			${tr_workbooks} 							///
-			${tr_surveyok}								///
+			surveyok									///
+			summaryonly									///
 			replace
    }

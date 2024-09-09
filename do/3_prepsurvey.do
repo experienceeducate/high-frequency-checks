@@ -32,14 +32,10 @@
 
 	* NB: Edit this section to include variables as needed
 
-	#d;
-	drop deviceid 
-		 subscriberid 
-		 simid 
-		 devicephonenum 
-		 username
-		 ;
-	#d cr
+	loc drop_vars deviceid subscriberid simid devicephonenum username
+	foreach var of loc drop_vars {
+		cap drop `var'
+	}
 	
 **# destring numeric variables
 *------------------------------------------------------------------------------*
