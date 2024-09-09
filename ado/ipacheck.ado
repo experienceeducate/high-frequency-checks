@@ -340,14 +340,14 @@ program define ipacheck_new
 	file read master_orig line
 	while r(eof) == 0 {
 		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
-			file write master_new "	    do 2_dofiles/1_globals_`surveys'.do" _n			
+			file write master_new `"	    do "2_dofiles/1_globals_`surveys'.do"    // globals do-file"' _n			
 		}
 		else if strpos(`"`line'"', "2_dofiles/3_prepsurvey.do") {
-			file write master_new "	    do 2_dofiles/3_prepsurvey_`surveys'.do" _n
+			file write master_new `"	    do "2_dofiles/3_prepsurvey_`surveys'.do"    // prep survey do-file"' _n
 			
 		}
 		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
-			file write master_new "	    do 2_dofiles/4_checksurvey_`surveys'.do" _n
+			file write master_new `"	    do "2_dofiles/4_checksurvey_`surveys'.do"    // check survey do-file"' _n
 			
 		}
 		else if strpos(`"`line'"', `"if "$cwd" ~= "" cd "$cwd""') {
