@@ -396,11 +396,11 @@ program define ipacheck_new
 			}
 		}
 	}
-	
+
 	* Modify 1_globals.do to specify survey file
-	copy "`exp_dir'/1_globals_trial4.do" "`exp_dir'/1_globals_trial4_tmp.do", replace
-	file open global_orig using "`exp_dir'/1_globals_trial4.do", read text
-	file open global_new using "`exp_dir'/1_globals_trial4_tmp.do", read write text
+	copy "`exp_dir'/2_dofiles/1_globals_`surveys'.do" "`exp_dir'/2_dofiles/1_globals_`surveys'_tmp.do", replace
+	file open global_orig using "`exp_dir'/2_dofiles/1_globals_`surveys'.do", read text
+	file open global_new using "`exp_dir'/2_dofiles/1_globals_`surveys'_tmp.do", read write text
 	file read global_orig line
 	while r(eof) == 0 {
 		 if strpos(`"`line'"', "gl rawsurvey") {
@@ -445,8 +445,8 @@ program define ipacheck_new
 	}
 	file close global_orig
 	file close global_new
-	copy "`exp_dir'/1_globals_trial4_tmp.do" "`exp_dir'/1_globals_trial4.do", replace
-	erase "`exp_dir'/1_globals_trial4_tmp.do"
+	copy "`exp_dir'/2_dofiles/1_globals_`surveys'_tmp.do" "`exp_dir'/2_dofiles/1_globals_`surveys'.do", replace
+	erase "`exp_dir'/2_dofiles/1_globals_`surveys'_tmp.do"
 	
 	
 	if "`filesonly'" == "" 	loc exp_dir "`folder'/3_checks/1_inputs"
