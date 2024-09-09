@@ -8,7 +8,7 @@ program ipacheckoutliers, rclass
 	version 17
 
 	#d;
-	syntax 	using/,
+	syntax 	,
 			[SHeet(string)]
         	OUTFile(string)
         	[OUTSheet(string)]  
