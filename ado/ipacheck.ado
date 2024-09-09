@@ -233,7 +233,7 @@ program define ipacheck_new
 	
 	if "`folder'" == "" {
 		loc folder "`c(pwd)'"
-	
+	}
 		
 	loc surveys_cnt = `:word count `surveys''
 	
