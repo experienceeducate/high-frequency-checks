@@ -235,17 +235,17 @@ program define ipacheck_new
 		loc folder "`c(pwd)'"
 	}
 	
-	if `"`hhid'"' != "" {
-		global id `"`hhid'"'
+	if "`hhid'" != "" {
+		global id "`hhid'"
 	}
-	if `"`enumerator'"' != "" {
-		global enum `"`enumerator'"'
+	if "`enumerator'" != "" {
+		global enum "`enumerator'"
 	}
-	if `"`team'"' != "" {
-		global team `"`team'"'
+	if "`team'" != "" {
+		global team "`team'"
 	}
-	if `"`consent'"' != "" {
-		global consent `"`consent'"'
+	if "`consent'" != "" {
+		global consent "`consent'"
 	}
 		
 	loc surveys_cnt = `:word count `surveys''
