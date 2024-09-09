@@ -340,14 +340,14 @@ program define ipacheck_new
 	file read master_orig line
 	while r(eof) == 0 {
 		 if strpos(`"`line'"', "2_dofiles/1_globals.do") {
-			file write master_new "	    2_dofiles/1_globals_`surveys'.do" _n			
+			file write master_new "	    do 2_dofiles/1_globals_`surveys'.do" _n			
 		}
 		else if strpos(`"`line'"', "2_dofiles/3_prepsurvey.do") {
-			file write master_new "2_dofiles/3_prepsurvey_`surveys'.do" _n
+			file write master_new "	    do 2_dofiles/3_prepsurvey_`surveys'.do" _n
 			
 		}
 		else if strpos(`"`line'"', "2_dofiles/4_checksurvey.do") {
-			file write master_new "2_dofiles/4_checksurvey_`surveys'.do" _n
+			file write master_new "	    do 2_dofiles/4_checksurvey_`surveys'.do" _n
 			
 		}
 		else if strpos(`"`line'"', `"if "$cwd" ~= "" cd "$cwd""') {
@@ -414,6 +414,10 @@ program define ipacheck_new
 			file write global_new `"	    gl checkedsurvey "\${cwd}/4_data/2_survey/`surveys'_checked.dta" "' _n
 			
 		}
+		else if strpos(`"`line'"', "gl mastersurvey") {
+			file write global_new `"	    gl mastersurvey "\${cwd}/4_data/2_survey/`surveys'_preloads.dta" "' _n
+			
+		}		
 		else if strpos(`"`line'"', "cap mkdir") {
 			file write global_new `"	    cap mkdir        "\${cwd}/3_checks/2_outputs/$folder_date" "' _n
 			
