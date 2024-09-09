@@ -228,7 +228,12 @@ program define ipacheck_new
 	syntax, [surveys(string)] [folder(string)] [SUBfolders] [hhid(string)] ///
 	[ENUMerator(string)] [team(string)] [CONSent(string)] [filesonly] ///
 	[exercise] [branch(name)] url(string)
-	
+	noi display "Survey: `surveys'"
+    noi display "Folder: `folder'"
+    noi display "HHID: `hhid'"
+    noi display "Enumerator: `enumerator'"
+    noi display "Team: `team'"
+    noi display "Consent: `consent'"
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
 	if "`folder'" == "" {
@@ -390,13 +395,6 @@ program define ipacheck_new
 	file open global_new using "`exp_dir'/1_globals_`surveys'_tmp.do", read write text
 	file read global_orig line
 	while r(eof) == 0 {
-		    * Display variables for debugging
-    display "Survey: `surveys'"
-    display "Folder: `folder'"
-    display "HHID: `hhid'"
-    display "Enumerator: `enumerator'"
-    display "Team: `team'"
-    display "Consent: `consent'"
 		 if strpos(`"`line'"', "gl rawsurvey") {
 			file write global_new `"	    gl rawsurvey "\${cwd}/4_data/2_survey/`surveys'.dta" "' _n			
 		}
