@@ -233,20 +233,7 @@ program define ipacheck_new
 	
 	if "`folder'" == "" {
 		loc folder "`c(pwd)'"
-	}
 	
-	if "`hhid'" != "" {
-		global id "`hhid'"
-	}
-	if "`enumerator'" != "" {
-		global enum "`enumerator'"
-	}
-	if "`team'" != "" {
-		global team "`team'"
-	}
-	if "`consent'" != "" {
-		global consent "`consent'"
-	}
 		
 	loc surveys_cnt = `:word count `surveys''
 	
@@ -459,6 +446,18 @@ program define ipacheck_new
 	copy "`exp_dir'/1_globals_`surveys'_tmp.do" "`exp_dir'/1_globals_`surveys'.do", replace
 	erase "`exp_dir'/1_globals_`surveys'_tmp.do"
 	
+	if "`hhid'" != "" {
+		global id "`hhid'"
+	}
+	if "`enumerator'" != "" {
+		global enum "`enumerator'"
+	}
+	if "`team'" != "" {
+		global team "`team'"
+	}
+	if "`consent'" != "" {
+		global consent "`consent'"
+	}
 	
 	if "`filesonly'" == "" 	loc exp_dir "`folder'/3_checks/1_inputs"
 	else 					loc exp_dir "`folder'"
