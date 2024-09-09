@@ -430,16 +430,16 @@ program define ipacheck_new
 			file write global_new `"	    gl hfc_output        "\${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx" "' _n
 			
 		}
-        else if strpos(`"`line'"', `"gl id"') & `"`hhid'"' != "" {
+        else if strpos(`"`line'"', "gl id") & "`hhid'" != "" {
 			file write global_new 	`"	    gl id "`hhid'""' _n            
 		}
-        else if strpos(`"`line'"', `"gl enum"') & `"`enumerator'"' != "" {
+        else if strpos(`"`line'"', "gl enum") & "`enumerator'" != "" {
 			file write global_new 	`"	    gl enum "`enumerator'""' _n            
 		}	
-        else if strpos(`"`line'"', `"gl team"') & `"`team'"' != "" {
+        else if strpos(`"`line'"', "gl team") & "`team'" != "" {
 			file write global_new 	`"	    gl team "`team'""' _n            
 		}
-        else if strpos(`"`line'"', `"gl consent"') & `"`consent'"' != "" {
+        else if strpos(`"`line'"', "gl consent") & "`consent'" != "" {
 			file write global_new 	`"	    gl consent "`consent'""' _n            
 		}		
 		else {
