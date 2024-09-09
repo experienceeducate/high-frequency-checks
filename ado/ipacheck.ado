@@ -9,15 +9,15 @@ program ipacheck, rclass
 	#d;
 	syntax 	name(name=subcmd id="sub command"), 
 			[SURVeys(string)] 
-			[FOLDer(string)] 
+			[FOLDer(string)]
+			[HHID(string)]
+			[ENUMerator(string)] 
+			[TEAM(string)] 
+			[CONSent(string)]
 			[SUBfolders] 
 			[FILESonly] 
 			[EXercise]
 			[BRanch(name) force]
-			[HHID(string)] 
-			[ENUMerator(string)] 
-			[TEAM(string)] 
-			[CONSent(string)]
 			;
 	#d cr
 
