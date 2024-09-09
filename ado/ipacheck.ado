@@ -225,8 +225,8 @@ end
 
 program define ipacheck_new
 	
-	syntax, [surveys(string)] [folder(string)] [SUBfolders] [HHID(string)] ///
-	[ENUMerator(string)] [TEAM(string)] [CONSent(string)] [filesonly] ///
+	syntax, [surveys(string)] [folder(string)] [SUBfolders] [hhid(string)] ///
+	[ENUMerator(string)] [team(string)] [CONSent(string)] [filesonly] ///
 	[exercise] [branch(name)] url(string)
 	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
