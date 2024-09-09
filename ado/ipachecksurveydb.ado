@@ -316,8 +316,8 @@ program ipachecksurveydb, rclass
 			
 			* export partially completed sheet. This is to hold the position of the sheet 
 			if "`replace'" ~= "" cap rm "`outfile'"
-			export excel using "`outfile'", replace sheet("summary")
-			mata: format_sdb_summary("`outfile'", "summary", `_cons', `_dk', `_ref', `_other', `_dur', "`firstdate'", "`lastdate'")	
+			export excel using "`outfile'", sheetreplace sheet("survey dashboard summary")
+			mata: format_sdb_summary("`outfile'", "survey dashboard summary", `_cons', `_dk', `_ref', `_other', `_dur', "`firstdate'", "`lastdate'")
 		}
 		
 		frame drop frm_summary
