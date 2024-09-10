@@ -10,10 +10,10 @@ program ipacheck, rclass
 	syntax 	name(name=subcmd id="sub command"), 
 			[SURVeys(string)] 
 			[FOLDer(string)]
-			[HHID(string)]
-			[ENUMerator(string)] 
-			[TEAM(string)] 
-			[CONSent(string)]
+			[OBSID(string)]
+			[ENUMID(string)] 
+			[TEAMID(string)] 
+			[CONSENTVAR(string)]
 			[SUBfolders] 
 			[FILESonly] 
 			[EXercise]
@@ -225,8 +225,8 @@ end
 
 program define ipacheck_new
 	
-	syntax, [surveys(string)] [folder(string)] [SUBfolders] [hhid(string)] ///
-	[ENUMerator(string)] [team(string)] [CONSent(string)] [filesonly] ///
+	syntax, [surveys(string)] [folder(string)] [SUBfolders] [obsid(string)] ///
+	[enumid(string)] [teamid(string)] [consentvar(string)] [filesonly] ///
 	[exercise] [branch(name)] url(string)
 	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
@@ -234,18 +234,20 @@ program define ipacheck_new
 	if "`folder'" == "" {
 		loc folder "`c(pwd)'"
 	}
-	if "`hhid'" != "" {
-		global id "`hhid'"
+	if "`obsid'" != "" {
+		global id "`obsid'"
 	}
-	if "`enumerator'" != "" {
-		global enum "`enumerator'"
+	if "`enumid'" != "" {
+		global enum "`enumid'"
 	}
-	if "`team'" != "" {
-		global team "`team'"
+	if "`teamid'" != "" {
+		global team "`teamid'"
 	}
-	if "`consent'" != "" {
-		global consent "`consent'"
+	if "`consentvar'" != "" {
+		global consent "`consentvar'"
 	}
+	
+	macro list
 	
 	loc surveys_cnt = `:word count `surveys''
 	
@@ -429,17 +431,17 @@ program define ipacheck_new
 			file write global_new `"	    gl hfc_output        "\${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx" "' _n
 			
 		}
-        else if strpos(`"`line'"', "gl id") & "`hhid'" != "" {
-			file write global_new 	`"	    gl id "${id}""' _n            
+        else if strpos(`"`line'"', "gl id") & "`obsid'" != "" {
+			file write global_new 	`"	    gl id "`obsid'""' _n            
 		}
         else if strpos(`"`line'"', "gl enum") & "`enumerator'" != "" {
-			file write global_new 	`"	    gl enum "${enum}""' _n            
+			file write global_new 	`"	    gl enum "`enumid'""' _n            
 		}	
         else if strpos(`"`line'"', "gl team") & "`team'" != "" {
-			file write global_new 	`"	    gl team "${team}""' _n            
+			file write global_new 	`"	    gl team "`teamid'""' _n            
 		}
         else if strpos(`"`line'"', "gl consent") & "`consent'" != "" {
-			file write global_new 	`"	    gl consent "${consent}""' _n            
+			file write global_new 	`"	    gl consent "`consentvar'""' _n            
 		}		
 		else {
 			file write global_new `"`line'"' _n
