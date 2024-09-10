@@ -132,6 +132,7 @@
 	gl duration				"duration"											
 	gl formversion 			"formdef_version"									
 	gl consent 				"consent"
+	glo branch				""
 
 	
 /* Missing values
@@ -173,12 +174,12 @@
 	
 	* NB: Edit this section: Change values if neccesary. 
 	
-	gl cons_vals			"1"													
-	gl outc_vals 			"1"													
-	gl dk_num 				"-999 999 .999"												
-	gl dk_str 				"-999"												
-	gl ref_num				"-888 888 .888"												
-	gl ref_str				"-888"												
+	gl cons_vals			"1"
+	gl outc_vals 			"1"
+	gl dk_num 				"-999 999 .999"
+	gl dk_str 				"-999"
+	gl ref_num				"-888 888 .888"
+	gl ref_str				"-888"
 	
 	
 	
@@ -198,5 +199,5 @@
 */
 *------------------------------------------------------------------------------*
 
-	gl en_period        	"auto"												
+	gl en_period        	"auto"
 	

@@ -89,24 +89,6 @@
 			sheetreplace
    }
    
-   *=========================== Survey Dashboard ==============================* 
-	
-   if $run_surveydb {
-		ipachecksurveydb,			 					///
-			by(${sv_by})								///
-			enumerator(${enum}) 						///
-			date(${date})								///
-			period("${sv_period}")						///
-			dontknow(.d, ${dk_str})						///
-			refuse(.r, ${ref_str})						///
-			otherspecify("`childvars'")					///
-			duration(${duration})						///
-			formversion(${formversion})					///
-        	outfile("${hfc_output}")					///
-			${sv_nolabel}								///
-			sheetreplace
-   }
-   
    *========================= Enumerator Dashboard ============================* 
   
    if $run_enumdb {
@@ -123,6 +105,24 @@
 			formversion(${formversion})					///
         	outfile("${hfc_output}")					///
 			${en_nolabel}								///
+			sheetreplace
+   }   
+   
+   *=========================== Survey Dashboard ==============================* 
+	
+   if $run_surveydb {
+		ipachecksurveydb,			 					///
+			by(${sv_by})								///
+			enumerator(${enum}) 						///
+			date(${date})								///
+			period("${sv_period}")						///
+			dontknow(.d, ${dk_str})						///
+			refuse(.r, ${ref_str})						///
+			otherspecify("`childvars'")					///
+			duration(${duration})						///
+			formversion(${formversion})					///
+        	outfile("${hfc_output}")					///
+			${sv_nolabel}								///
 			sheetreplace
    }
   

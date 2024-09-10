@@ -82,8 +82,8 @@ program ipacheckoutliers, rclass
 			forvalues i = 1/`=_N' {
 				local var_name = variable[`i']
 
-				if regexm("`var_name'", "^(.+?_)\d+$") {
-					local prefix = regexs(1)
+				if ustrregexm("`var_name'", "^(.+?_)\d+$") {
+					local prefix = ustrregexs(1)
 					local common_prefixes `common_prefixes' `prefix'
 				}
 			}
@@ -95,7 +95,7 @@ program ipacheckoutliers, rclass
 				local var_name = variable[`i']
 				
 				foreach prefix of local common_prefixes {
-					if regexm("`var_name'", "^`prefix'\d+$") {
+					if ustrregexm("`var_name'", "^`prefix'\d+$") {
 						replace common_prefix = "`prefix'" in `i'
 						local matched_vars `matched_vars' `var_name'
 					}
@@ -266,6 +266,19 @@ program ipacheckoutliers, rclass
 					
 			if "`keep'" ~= "" ipalabels `keep', `nolabel'
 			ipalabels `id' `enumerator', `nolabel'
+			
+			loc cto_list "device_info deviceid duration endtime  starttime formdef_version key submissiondate username uuid uuid_confirm caseid devicephonenum audio_audit startdate subdate"
+			loc drop_list ""
+			foreach var of local cto_list {
+				cap confirm var `var' 
+				if _rc == 0 {
+					loc drop_list `drop_list' `var'
+				}
+			}
+			foreach var of local drop_list {
+				drop if variable == "`var'"
+			}
+			
 			export excel using "`outfile'", first(varl) sheet("`outsheet'") `sheetreplace'
 
 			ipacolwidth using "`outfile'", sheet("`outsheet'")

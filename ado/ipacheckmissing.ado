@@ -85,9 +85,7 @@ program ipacheckmissing, rclass
 		}
 		
 		* drop unnecessary variables
-		loc cto_list "device_info deviceid duration endtime formdef_version" ///
-			"key starttime submissiondate username uuid uuid_confirm caseid" ///
-			"devicephonenum audio_audit"
+		loc cto_list "device_info deviceid duration endtime  starttime formdef_version key submissiondate username uuid uuid_confirm caseid devicephonenum audio_audit startdate subdate"
 		local drop_vars "`dropvars'"
 		loc drop_list ""
 		foreach var of local cto_list {
