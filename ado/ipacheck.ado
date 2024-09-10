@@ -10,6 +10,10 @@ program ipacheck, rclass
 	syntax 	name(name=subcmd id="sub command"), 
 			[SURVeys(string)] 
 			[FOLDer(string)]
+			[OBSID(string)]
+			[ENUMID(string)]
+			[TEAMID(string)]
+			[CONSENTVAR(string)]
 			[SUBfolders] 
 			[FILESonly] 
 			[EXercise]
@@ -227,19 +231,19 @@ program define ipacheck_new
 	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
-	if "`folder'" == "" {
+	if "`_folder'" == "" {
 		loc folder "`c(pwd)'"
 	}
-	if "`obsid'" != "" {
+	if "`_obsid'" != "" {
 		global id "`obsid'"
 	}
-	if "`enumid'" != "" {
+	if "`_enumid'" != "" {
 		global enum "`enumid'"
 	}
-	if "`teamid'" != "" {
+	if "`_teamid'" != "" {
 		global team "`teamid'"
 	}
-	if "`consentvar'" != "" {
+	if "`_consentvar'" != "" {
 		global consent "`consentvar'"
 	}
 	
