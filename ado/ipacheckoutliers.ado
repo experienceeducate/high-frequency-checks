@@ -279,6 +279,8 @@ program ipacheckoutliers, rclass
 				drop if variable == "`var'"
 			}
 			
+			gsort -`date'
+			
 			export excel using "`outfile'", first(varl) sheet("`outsheet'") `sheetreplace'
 
 			ipacolwidth using "`outfile'", sheet("`outsheet'")

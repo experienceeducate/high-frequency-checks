@@ -141,6 +141,10 @@ program ipacheckversions, rclass
 			
 			if "`keep'" ~= "" ipalabels `keep', `nolabel'
 			ipalabels `enumerator', `nolabel'
+			
+			gsort -`date'
+			cap duplicates drop
+			
 			export excel using "`outfile'", first(varl) sheet("`outsheet2'") `sheetreplace'
 			
 			ipacolwidth using "`outfile'", sheet("`outsheet2'")
