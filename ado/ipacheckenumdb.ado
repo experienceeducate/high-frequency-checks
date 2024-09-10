@@ -269,7 +269,7 @@ program ipacheckenumdb, rclass
 		* export file
 		export excel using "`outfile'", first(varl) sheet("duration") `sheetreplace' `sheetmodify'
 		ipacolwidth using "`outfile'", sheet("duration")
-		iparowformat using "`outfile'", sheet("summary") type(header)
+		iparowformat using "`outfile'", sheet("duration") type(header)
 		if `_dur'   ipacolformat using "`outfile'", sheet("duration") ///
 			vars(duration_mean duration_median duration_min duration_max) format("number_sep")				
 
