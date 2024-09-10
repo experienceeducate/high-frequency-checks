@@ -258,10 +258,7 @@ program define ipacheck_new
 				"1_instruments/3_scto_xls"
 			"2_dofiles"
 			"3_checks"	
-			"4_data"
-				"4_data/1_preloads"
-				"4_data/2_survey"
-				"4_data/4_monitoring""
+			"4_data""
 			;
 		#d cr
 		
@@ -284,9 +281,6 @@ program define ipacheck_new
 			
 			#d;
 			loc sfs
-				""4_data/1_preloads"
-				"4_data/2_survey"
-				"4_data/4_monitoring""
 				;
 			#d cr
 			
@@ -398,18 +392,18 @@ program define ipacheck_new
 	file read global_orig line
 	while r(eof) == 0 {
 		 if strpos(`"`line'"', "gl rawsurvey") {
-			file write global_new `"	gl rawsurvey "\${cwd}/4_data/2_survey/`surveys'.dta" "' _n			
+			file write global_new `"	gl rawsurvey "\${cwd}/4_data/`surveys'.dta" "' _n			
 		}
 		else if strpos(`"`line'"', "gl preppedsurvey") {
-			file write global_new `"	gl preppedsurvey "\${cwd}/4_data/2_survey/`surveys'_prepped.dta" "' _n
+			file write global_new `"	gl preppedsurvey "\${cwd}/4_data/`surveys'_prepped.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl checkedsurvey") {
-			file write global_new `"	gl checkedsurvey "\${cwd}/4_data/2_survey/`surveys'_checked.dta" "' _n
+			file write global_new `"	gl checkedsurvey "\${cwd}/4_data/`surveys'_checked.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl mastersurvey") {
-			file write global_new `"	gl mastersurvey "\${cwd}/4_data/2_survey/`surveys'_preloads.dta" "' _n
+			file write global_new `"	gl mastersurvey "\${cwd}/4_data/`surveys'_preloads.dta" "' _n
 			
 		}		
 		else if strpos(`"`line'"', "cap mkdir") {
@@ -462,8 +456,8 @@ program define ipacheck_new
 		noi disp
 
 		foreach file in household_survey.dta household_backcheck.dta household_preloads.xlsx respondent_targets.xlsx {
-			qui copy "`url'/`branch'/data/`file'" "`folder'/4_data/2_survey/`file'", replace
-			noi disp "`file' copied to 4_data/2_survey/`file'"
+			qui copy "`url'/`branch'/data/`file'" "`folder'/4_data/`file'", replace
+			noi disp "`file' copied to 4_data/`file'"
 		}
 		
 		qui copy "`url'/`branch'/excel/exercise/Household_Survey.xlsx" "`folder'/1_instruments/3_scto_xls/Household_Survey.xlsx", replace
@@ -476,13 +470,13 @@ program define ipacheck_new
 		noi disp "Unpacking text audit and comment files ..."
 		noi disp
 
-		mata: st_numscalar("exists", direxists("`folder'/4_data/2_survey/media"))
+		mata: st_numscalar("exists", direxists("`folder'/4_data/media"))
 		if scalar(exists) == 1 {
-			cd "`folder'/4_data/2_survey"
+			cd "`folder'/4_data"
 		}
 		else {
-			mkdir "`folder'/4_data/2_survey/media"
-			cd "`folder'/4_data/2_survey"
+			mkdir "`folder'/4_data/media"
+			cd "`folder'/4_data"
 		} 
 
 		* unpack text audits and comment files
@@ -512,7 +506,7 @@ program define ipacheck_new
 
 				loc file = subinstr("`=aud_audit[`i']'", "media\", "", 1)
 			
-				qui copy 	"`c(tmpdir)'/audio_file_sample.m4a" "`folder'/4_data/2_survey/media/`file'", replace
+				qui copy 	"`c(tmpdir)'/audio_file_sample.m4a" "`folder'/4_data/media/`file'", replace
 				noi _dots `i' 0
 			}
 
