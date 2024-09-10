@@ -403,22 +403,22 @@ program define ipacheck_new
 	file read global_orig line
 	while r(eof) == 0 {
 		 if strpos(`"`line'"', "gl rawsurvey") {
-			file write global_new `"	    gl rawsurvey "\${cwd}/4_data/2_survey/`surveys'.dta" "' _n			
+			file write global_new `"	gl rawsurvey "\${cwd}/4_data/2_survey/`surveys'.dta" "' _n			
 		}
 		else if strpos(`"`line'"', "gl preppedsurvey") {
-			file write global_new `"	    gl preppedsurvey "\${cwd}/4_data/2_survey/`surveys'_prepped.dta" "' _n
+			file write global_new `"	gl preppedsurvey "\${cwd}/4_data/2_survey/`surveys'_prepped.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl checkedsurvey") {
-			file write global_new `"	    gl checkedsurvey "\${cwd}/4_data/2_survey/`surveys'_checked.dta" "' _n
+			file write global_new `"	gl checkedsurvey "\${cwd}/4_data/2_survey/`surveys'_checked.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl mastersurvey") {
-			file write global_new `"	    gl mastersurvey "\${cwd}/4_data/2_survey/`surveys'_preloads.dta" "' _n
+			file write global_new `"	gl mastersurvey "\${cwd}/4_data/2_survey/`surveys'_preloads.dta" "' _n
 			
 		}		
 		else if strpos(`"`line'"', "cap mkdir") {
-			file write global_new `"	    cap mkdir        "\${cwd}/3_checks/2_outputs/$folder_date" "' _n
+			file write global_new `"	cap mkdir        "\${cwd}/3_checks/2_outputs/$folder_date" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl id_dups_output") {
@@ -430,16 +430,16 @@ program define ipacheck_new
 			
 		}
         else if strpos(`"`line'"', "gl id") & "`obsid'" != "" {
-			file write global_new 	`"	    gl id "`obsid'""' _n            
+			file write global_new 	`"	gl id					"`obsid'""' _n            
 		}
-        else if strpos(`"`line'"', "gl enum") & "`enumerator'" != "" {
-			file write global_new 	`"	    gl enum "`enumid'""' _n            
+        else if strpos(`"`line'"', "gl enum") & "`enumid'" != "" {
+			file write global_new 	`"	gl enum					"`enumid'""' _n            
 		}	
-        else if strpos(`"`line'"', "gl team") & "`team'" != "" {
-			file write global_new 	`"	    gl team "`teamid'""' _n            
+        else if strpos(`"`line'"', "gl team") & "`teamid'" != "" {
+			file write global_new 	`"	gl team					"`teamid'""' _n            
 		}
-        else if strpos(`"`line'"', "gl consent") & "`consent'" != "" {
-			file write global_new 	`"	    gl consent "`consentvar'""' _n            
+        else if strpos(`"`line'"', "gl consent") & "`consentvar'" != "" {
+			file write global_new 	`"	gl consent					"`consentvar'""' _n            
 		}		
 		else {
 			file write global_new `"`line'"' _n
