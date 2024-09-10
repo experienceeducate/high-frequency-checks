@@ -257,9 +257,7 @@ program define ipacheck_new
 				"1_instruments/2_scto_print"
 				"1_instruments/3_scto_xls"
 			"2_dofiles"
-			"3_checks"
-				"3_checks/1_inputs"
-				"3_checks/2_outputs"	
+			"3_checks"	
 			"4_data"
 				"4_data/1_preloads"
 				"4_data/2_survey"
@@ -286,11 +284,8 @@ program define ipacheck_new
 			
 			#d;
 			loc sfs
-				""3_checks/1_inputs"
-				"3_checks/2_outputs"
-				"4_data/1_preloads"
+				""4_data/1_preloads"
 				"4_data/2_survey"
-				"4_data/3_backcheck"
 				"4_data/4_monitoring""
 				;
 			#d cr
@@ -418,15 +413,15 @@ program define ipacheck_new
 			
 		}		
 		else if strpos(`"`line'"', "cap mkdir") {
-			file write global_new `"	cap mkdir        "\${cwd}/3_checks/2_outputs/$folder_date" "' _n
+			file write global_new `"	cap mkdir        "\${cwd}/3_checks/$folder_date" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl id_dups_output") {
-			file write global_new `"	    gl id_dups_output        "\${cwd}/3_checks/2_outputs/$folder_date/survey_duplicates.dta" "' _n
+			file write global_new `"	    gl id_dups_output        "\${cwd}/3_checks/$folder_date/survey_duplicates.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl hfc_output") {
-			file write global_new `"	    gl hfc_output        "\${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx" "' _n
+			file write global_new `"	    gl hfc_output        "\${cwd}/3_checks/$folder_date/hfc_output.xlsx" "' _n
 			
 		}
         else if strpos(`"`line'"', "gl id") & "`obsid'" != "" {
@@ -451,39 +446,12 @@ program define ipacheck_new
 	copy "`exp_dir'/1_globals_`surveys'_tmp.do" "`exp_dir'/1_globals_`surveys'.do", replace
 	erase "`exp_dir'/1_globals_`surveys'_tmp.do"
 	
-	if "`filesonly'" == "" 	loc exp_dir "`folder'/3_checks/1_inputs"
+	if "`filesonly'" == "" 	loc exp_dir "`folder'/3_checks/"
 	else 					loc exp_dir "`folder'"
 	
 	noi disp
-	noi disp "Copying files to `folder'/3_checks/1_inputs ..."
+	noi disp "Copying files to `folder'/3_checks/ ..."
 	noi disp
-	
-	foreach file in hfc_inputs {
-		if `surveys_cnt' > 0 {
-			forval i = 1/`surveys_cnt' {
-				loc exp_file = "`file'_" + word("`surveys'", `i')
-				loc exp_dirmult  = cond("`subfolders'" == "", "`exp_dir'", "`exp_dir'/`i'_" + word("`surveys'", `i'))
-				cap confirm file "`exp_dirmult'/`exp_file'.xlsm"
-				if _rc == 601 {
-					qui copy "`url'/`branch'/excel/templates/`file'.xlsm" "`exp_dirmult'/`exp_file'.xlsm"
-					noi disp "`exp_file'.xlsm copied to `exp_dirmult'"
-				}
-				else {
-					noi disp "{red:Skipped}: File `file' already exists"
-				}
-			}
-		}
-		else {
-			cap confirm file "`exp_dir'/`file'.xlsm"
-			if _rc == 601 {
-				qui copy "`url'/`branch'/excel/templates/`file'.xlsm" "`exp_dir'/`file'.xlsm"
-				noi disp "`file'.xlsm copied to `exp_dir'"
-			}
-			else {
-				noi disp "{red:Skipped}: File `file' already exists"
-			}
-		}
-	}
 
 	if "`exercise'" ~= "" {
 	

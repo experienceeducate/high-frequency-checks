@@ -50,7 +50,7 @@
 	* NB: DO NOT EDIT THIS SECTION
 	
 	gl folder_date			= string(year(today())) + "-`:disp %tdNN today()'-`:disp %tdDD today()'"
-	cap mkdir				"${cwd}/3_checks/2_outputs/$folder_date"
+	cap mkdir				"${cwd}/3_checks/$folder_date"
 
 
 /* Output files
@@ -74,8 +74,8 @@
 	* NB: Edit this section: Change filenames if neccesary
 	
 
-	gl id_dups_output 		"${cwd}/3_checks/2_outputs/$folder_date/survey_duplicates.dta"
-	gl hfc_output			"${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx"
+	gl id_dups_output 		"${cwd}/3_checks/$folder_date/survey_duplicates.dta"
+	gl hfc_output			"${cwd}/3_checks/$folder_date/hfc_output.xlsx"
 
 /* Admin variables
 
