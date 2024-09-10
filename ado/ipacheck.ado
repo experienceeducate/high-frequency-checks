@@ -224,23 +224,33 @@ void get_version(string scalar program) {
 end
 
 program define ipacheck_new
+
+	noi macro list
 	
 	syntax, [surveys(string)] [folder(string)] [SUBfolders] [hhid(string)] ///
 	[ENUMerator(string)] [team(string)] [CONSent(string)] [filesonly] ///
 	[exercise] [branch(name)] url(string)
-	noi display "Survey: `surveys'"
-    noi display "Folder: `folder'"
-    noi display "HHID: `hhid'"
-    noi display "Enumerator: `enumerator'"
-    noi display "Team: `team'"
-    noi display "Consent: `consent'"
+
 	noi macro list
+	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
 	if "`folder'" == "" {
 		loc folder "`c(pwd)'"
 	}
-		
+	if "`hhid'" != "" {
+		global id "`hhid'"
+	}
+	if "`enumerator'" != "" {
+		global enum "`enumerator'"
+	}
+	if "`team'" != "" {
+		global team "`team'"
+	}
+	if "`consent'" != "" {
+		global consent "`consent'"
+	}
+	
 	loc surveys_cnt = `:word count `surveys''
 	
 	if "`filesonly'" == "" {
@@ -444,19 +454,6 @@ program define ipacheck_new
 	file close global_new
 	copy "`exp_dir'/1_globals_`surveys'_tmp.do" "`exp_dir'/1_globals_`surveys'.do", replace
 	erase "`exp_dir'/1_globals_`surveys'_tmp.do"
-	
-	if "`hhid'" != "" {
-		global id "`hhid'"
-	}
-	if "`enumerator'" != "" {
-		global enum "`enumerator'"
-	}
-	if "`team'" != "" {
-		global team "`team'"
-	}
-	if "`consent'" != "" {
-		global consent "`consent'"
-	}
 	
 	if "`filesonly'" == "" 	loc exp_dir "`folder'/3_checks/1_inputs"
 	else 					loc exp_dir "`folder'"
