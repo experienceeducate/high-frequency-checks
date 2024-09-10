@@ -267,14 +267,7 @@ program ipacheckoutliers, rclass
 			if "`keep'" ~= "" ipalabels `keep', `nolabel'
 			ipalabels `id' `enumerator', `nolabel'
 			
-			loc cto_list "device_info deviceid duration endtime  starttime formdef_version key submissiondate username uuid uuid_confirm caseid devicephonenum audio_audit startdate subdate"
-			loc drop_list ""
-			foreach var of local cto_list {
-				cap confirm var `var' 
-				if _rc == 0 {
-					loc drop_list `drop_list' `var'
-				}
-			}
+			loc drop_list "device_info deviceid duration endtime  starttime formdef_version key submissiondate username uuid uuid_confirm caseid devicephonenum audio_audit startdate subdate enddate"
 			foreach var of local drop_list {
 				drop if variable == "`var'"
 			}
