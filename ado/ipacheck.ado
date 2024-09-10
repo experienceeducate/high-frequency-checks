@@ -231,19 +231,19 @@ program define ipacheck_new
 	
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
-	if "`_folder'" == "" {
+	if "`folder'" == "" {
 		loc folder "`c(pwd)'"
 	}
-	if "`_obsid'" != "" {
+	if "`obsid'" != "" {
 		global id "`obsid'"
 	}
-	if "`_enumid'" != "" {
+	if "`enumid'" != "" {
 		global enum "`enumid'"
 	}
-	if "`_teamid'" != "" {
+	if "`teamid'" != "" {
 		global team "`teamid'"
 	}
-	if "`_consentvar'" != "" {
+	if "`consentvar'" != "" {
 		global consent "`consentvar'"
 	}
 		
