@@ -10,10 +10,6 @@ program ipacheck, rclass
 	syntax 	name(name=subcmd id="sub command"), 
 			[SURVeys(string)] 
 			[FOLDer(string)]
-			[OBSID(string)]
-			[ENUMID(string)] 
-			[TEAMID(string)] 
-			[CONSENTVAR(string)]
 			[SUBfolders] 
 			[FILESonly] 
 			[EXercise]
