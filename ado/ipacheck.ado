@@ -234,6 +234,7 @@ program define ipacheck_new
     noi display "Enumerator: `enumerator'"
     noi display "Team: `team'"
     noi display "Consent: `consent'"
+	noi macro list
 	loc branch 	= cond("`branch'" ~= "", "`branch'", "master") 
 	
 	if "`folder'" == "" {
