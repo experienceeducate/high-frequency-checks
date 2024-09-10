@@ -77,7 +77,7 @@ program ipacheck, rclass
 		loc url 	= "https://raw.githubusercontent.com/matteoram/high-frequency-checks"
 
 		if "`subcmd'" == "new" {
-			noi ipacheck_new, surveys(`surveys') folder("`folder'") `subfolders' `filesonly' url("`url'") branch(`branch') `exercise'
+			noi ipacheck_new, surveys(`surveys') folder("`folder'") obsid(`obsid') enumid(`enumid') teamid(`teamid') consentvar(`consentvar') `subfolders' `filesonly' url("`url'") branch(`branch') `exercise'
 			ex
 		}
 		else {
@@ -246,9 +246,7 @@ program define ipacheck_new
 	if "`_consentvar'" != "" {
 		global consent "`consentvar'"
 	}
-	
-	macro list
-	
+		
 	loc surveys_cnt = `:word count `surveys''
 	
 	if "`filesonly'" == "" {
