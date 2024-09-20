@@ -392,43 +392,45 @@ program define ipacheck_new
 	file read global_orig line
 	while r(eof) == 0 {
 		 if strpos(`"`line'"', "gl rawsurvey") {
-			file write global_new `"	gl rawsurvey "\${cwd}/4_data/`surveys'.dta" "' _n			
+			file write global_new `"    gl rawsurvey "\${cwd}/4_data/2_survey/`surveys'.dta" "' _n			
 		}
 		else if strpos(`"`line'"', "gl preppedsurvey") {
-			file write global_new `"	gl preppedsurvey "\${cwd}/4_data/`surveys'_prepped.dta" "' _n
+			file write global_new `"    gl preppedsurvey "\${cwd}/4_data/2_survey/`surveys'_prepped.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl checkedsurvey") {
-			file write global_new `"	gl checkedsurvey "\${cwd}/4_data/`surveys'_checked.dta" "' _n
+			file write global_new `"    gl checkedsurvey "\${cwd}/4_data/2_survey/`surveys'_checked.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl mastersurvey") {
-			file write global_new `"	gl mastersurvey "\${cwd}/4_data/`surveys'_preloads.dta" "' _n
+			file write global_new `"    gl mastersurvey "\${cwd}/4_data/2_survey/`surveys'_preloads.dta" "' _n
 			
 		}		
-		else if strpos(`"`line'"', "cap mkdir") {
-			file write global_new `"	cap mkdir        "\${cwd}/3_checks/$folder_date" "' _n
+		else if strpos(`"`line'"', "gl folder_date") {
+			file write global_new `"    gl folder_date			= string(year(today())) + "-\`:disp %tdNN today()'-\`:disp %tdDD today()'" "' _n
+			
+		}		else if strpos(`"`line'"', "cap mkdir") {
+			file write global_new `"    cap mkdir        "\${cwd}/3_checks/2_outputs/\$folder_date" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl id_dups_output") {
-			file write global_new `"	    gl id_dups_output        "\${cwd}/3_checks/$folder_date/survey_duplicates.dta" "' _n
+			file write global_new `"    gl id_dups_output        "\${cwd}/3_checks/2_outputs/$folder_date/survey_duplicates.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl hfc_output") {
-			file write global_new `"	    gl hfc_output        "\${cwd}/3_checks/$folder_date/hfc_output.xlsx" "' _n
-			
+			file write global_new `"    gl hfc_output        "\${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx" "' _n
 		}
         else if strpos(`"`line'"', "gl id") & "`obsid'" != "" {
-			file write global_new 	`"	gl id					"`obsid'""' _n            
+			file write global_new 	`"    gl id					"`obsid'""' _n            
 		}
         else if strpos(`"`line'"', "gl enum") & "`enumid'" != "" {
-			file write global_new 	`"	gl enum					"`enumid'""' _n            
+			file write global_new 	`"    gl enum					"`enumid'""' _n            
 		}	
         else if strpos(`"`line'"', "gl team") & "`teamid'" != "" {
-			file write global_new 	`"	gl team					"`teamid'""' _n            
+			file write global_new 	`"    gl team					"`teamid'""' _n            
 		}
         else if strpos(`"`line'"', "gl consent") & "`consentvar'" != "" {
-			file write global_new 	`"	gl consent					"`consentvar'""' _n            
+			file write global_new 	`"    gl consent					"`consentvar'""' _n            
 		}		
 		else {
 			file write global_new `"`line'"' _n
