@@ -421,7 +421,7 @@ program define ipacheck_new
 			file write global_new `"	gl folder_date			= string(year(today())) + "-`:disp %tdNN today()'-`:disp %tdDD today()'" "' _n
 			
 		}		else if strpos(`"`line'"', "cap mkdir") {
-			file write global_new `"	cap mkdir        "\${cwd}/3_checks/2_outputs/$folder_date" "' _n
+			file write global_new `"	cap mkdir        "\${cwd}/3_checks/2_outputs/\$folder_date" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl id_dups_output") {
