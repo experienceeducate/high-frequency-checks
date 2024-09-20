@@ -411,15 +411,15 @@ program define ipacheck_new
 			
 		}
 		else if strpos(`"`line'"', "cap mkdir") {
-			file write global_new `"    cap mkdir        "\${cwd}/3_checks/2_outputs/\$folder_date" "' _n
+			file write global_new `"    cap mkdir        "\${cwd}/3_checks/\$folder_date" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl id_dups_output") {
-			file write global_new `"    gl id_dups_output        "\${cwd}/3_checks/2_outputs/$folder_date/survey_duplicates.dta" "' _n
+			file write global_new `"    gl id_dups_output        "\${cwd}/3_checks/$folder_date/survey_duplicates.dta" "' _n
 			
 		}
 		else if strpos(`"`line'"', "gl hfc_output") {
-			file write global_new `"    gl hfc_output        "\${cwd}/3_checks/2_outputs/$folder_date/hfc_output.xlsx" "' _n
+			file write global_new `"    gl hfc_output        "\${cwd}/3_checks/$folder_date/hfc_output.xlsx" "' _n
 		}
         else if strpos(`"`line'"', "gl id") & "`obsid'" != "" {
 			file write global_new 	`"    gl id					"`obsid'""' _n            
