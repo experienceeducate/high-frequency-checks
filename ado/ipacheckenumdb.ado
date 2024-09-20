@@ -271,7 +271,76 @@ program ipacheckenumdb, rclass
 		ipacolwidth using "`outfile'", sheet("duration")
 		iparowformat using "`outfile'", sheet("duration") type(header)
 		if `_dur'   ipacolformat using "`outfile'", sheet("duration") ///
-			vars(duration_mean duration_median duration_min duration_max) format("number_sep")				
+			vars(duration_mean duration_median duration_min duration_max) format("number_sep")		
+
+		*** productivity ***
+		
+		* generate a calendar dataset
+		use "`tmf_main_data'", clear
+		ipagetcal `date', clear
+		
+		merge 1:m `date' using "`tmf_main_data'", keepusing(`date' `enumerator' `team') gen(datematch)
+		gen weight = cond(datematch == 3, 1, 0)
+		drop datematch
+		
+		* save data
+		save "`tmf_datecal'"
+			
+		if "`period'" == "daily" {
+			collapse (sum) submissions = weight, by(`enumerator' `date')
+			ren `date' jvar
+		}
+		else if "`period'" == "weekly" {
+			collapse (sum) submissions = weight, by(`enumerator' year week)
+			sort week
+			egen jvar = group(year week)
+		}
+		else {
+			collapse `date' (sum) submissions = weight, by(`enumerator' year month)
+			sort month
+			egen jvar = group(year month)
+		}
+		
+		ren submissions vv_
+		keep vv_ `enumerator' jvar
+		reshape wide vv_, i(`enumerator') j(jvar)
+		recode vv_* (. = 0)
+		
+		egen submissions = rowtotal(vv_*)
+		order submissions, after(`enumerator')
+		drop if submissions == 0
+		
+		* add a total row
+		loc add = `=_N' + 1
+		set obs `add'
+		
+		foreach var of varlist vv_* {
+				
+			loc vdate = substr("`var'", 4, .)
+			
+			if "`period'" == "daily" {
+				loc lab "`:disp %td  `vdate''"
+				lab var `var' "`lab'"
+			}
+			else if "`period'" == "weekly" 	lab var `var' "week `vdate'"
+			else 							lab var `var' "month `vdate'"
+			
+			mata: st_numscalar("sum", colsum(st_data(., "`var'")))
+			replace `var' = scalar(sum) in `add'
+		}
+	
+		mata: st_numscalar("sum", colsum(st_data(., "submissions")))
+		replace submissions = scalar(sum) in `add'
+		
+		ipalabels `enumerator', `nolabel'
+		lab var `enumerator' ""
+
+		export excel using "`outfile'", first(varl) sheet("`period' productivity (enum)") `sheetreplace' `sheetmodify'
+		ipacolwidth using "`outfile'", sheet("`period' productivity (enum)")
+		iparowformat using "`outfile'", sheet("`period' productivity (enum)") type(header)
+		ds, has(type numeric)
+		ipacolformat using "`outfile'", sheet("`period' productivity (enum)") vars(vv_*) format("number_sep")
+		iparowformat using "`outfile'", sheet("`period' productivity (enum)") type(total)			
 
 	}
 end
