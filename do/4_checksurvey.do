@@ -97,7 +97,7 @@
 			enumerator(${enum})							///
 			team(${team})								///
 			date(${date})								///
-			period("${en_period}")						///
+			period("${period}")						///
 			dontknow(.d, ${dk_str})						///
 			refuse(.r, ${ref_str})						///
 			otherspecify("`childvars'")					///
@@ -115,7 +115,7 @@
 			by(${sv_by})								///
 			enumerator(${enum}) 						///
 			date(${date})								///
-			period("${sv_period}")						///
+			period("${period}")						///
 			dontknow(.d, ${dk_str})						///
 			refuse(.r, ${ref_str})						///
 			otherspecify("`childvars'")					///

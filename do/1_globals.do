@@ -185,19 +185,12 @@
 	
    *========================== Additional Options ==========================* 
 	
-/* ipacheckenumdb: Export enum dashboard
-
-	Description of globals for ipacheckenumdb:
-	------------------------------------------
-	
-	ipacheckenumdb creates enumerator dashboard with rates of interviews, duration, 
-	don't know, refusal, missing, and other by enumerator, and variable statistics 
-	by enumerator.
+/*
 
 	en_period  			Interval for showing productivity (daily, weekly, monthly, auto)
 
 */
 *------------------------------------------------------------------------------*
 
-	gl en_period        	"auto"
+	gl period        	"auto"												
 	
