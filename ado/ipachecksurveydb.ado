@@ -455,20 +455,20 @@ program ipachecksurveydb, rclass
 			keep 	month startdate enddate submissions
 		}
 		
-		export excel using "`outfile'", first(var) sheet("`period' productivity")
-		ipacolwidth using "`outfile'", sheet("`period' productivity")
-		iparowformat using "`outfile'", sheet("`period' productivity") type(header)
+		export excel using "`outfile'", first(var) sheet("`period' productivity (survey)")
+		ipacolwidth using "`outfile'", sheet("`period' productivity (survey)")
+		iparowformat using "`outfile'", sheet("`period' productivity (survey)") type(header)
 		if "`period'" == "daily" {
-			ipacolformat using "`outfile'", sheet("`period' productivity") vars(day submissions) format("number_sep")
-			ipacolformat using "`outfile'", sheet("`period' productivity") vars(`date') format("date_d_mon_yy")
+			ipacolformat using "`outfile'", sheet("`period' productivity (survey)") vars(day submissions) format("number_sep")
+			ipacolformat using "`outfile'", sheet("`period' productivity (survey)") vars(`date') format("date_d_mon_yy")
 		}
 		else if "`period'" == "weekly" {
-			ipacolformat using "`outfile'", sheet("`period' productivity") vars(week submissions) format("number_sep")
-			ipacolformat using "`outfile'", sheet("`period' productivity") vars(startdate enddate) format("date_d_mon_yy")
+			ipacolformat using "`outfile'", sheet("`period' productivity (survey)") vars(week submissions) format("number_sep")
+			ipacolformat using "`outfile'", sheet("`period' productivity (survey)") vars(startdate enddate) format("date_d_mon_yy")
 		}
 		else {
-			ipacolformat using "`outfile'", sheet("`period' productivity") vars(month submissions) format("number_sep")
-			ipacolformat using "`outfile'", sheet("`period' productivity") vars(startdate enddate) format("date_d_mon_yy")
+			ipacolformat using "`outfile'", sheet("`period' productivity (survey)") vars(month submissions) format("number_sep")
+			ipacolformat using "`outfile'", sheet("`period' productivity (survey)") vars(startdate enddate) format("date_d_mon_yy")
 		}
 		
 		*** productivity by group ***
