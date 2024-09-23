@@ -31,11 +31,9 @@ Display version for each command in ipacheck
 {synoptline}
 {synopt:{opt surv:eys(namelist)}}get input files for multiple projects{p_end}
 {synopt:{opt fold:er("folder path")}}save to folder location{p_end}
-{synopt:{opt sub:folders}}create subfolders for each survey in {cmd:surveys()} option{p_end}
-{synopt:{opt files:only}}get input files only{p_end}
-{synopt:{opt br:anch("branchname")}}install programs and files from specified repository instead of master{p_end}
-{synopt:{opt ex:ercise}}generate folder structure with input files and exercise data{p_end}
-{synoptline}
+{synopt:{opt obsid}}specify the variable that uniquely identifies each observation{p_end}
+{synopt:{opt enumid}}specify the variable that uniquely identifies each enumerator{p_end}
+{synopt:{opt teamid}}specify the variable that uniquely identifies each supervisor or enumerator{p_end}
 {p2colreset}{...}
 
 {marker update_options}
