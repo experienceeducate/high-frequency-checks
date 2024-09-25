@@ -104,6 +104,7 @@ or other do-files. See {help ipacheck} for more details on how to use the Data M
 It is important to note that ipacheckversions was written to take advantage 
 of the SurveyCTO form versions format and therefore experts that the form versions 
 values are numeric and in ascending order from the oldest to the most recent form.
+Educate!'s version of this check sorts the output in chronological order and removes duplicates. 
 
 {title:Examples}
 

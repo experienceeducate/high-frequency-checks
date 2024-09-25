@@ -31,9 +31,9 @@ Display version for each command in ipacheck
 {synoptline}
 {synopt:{opt surv:eys(namelist)}}get input files for multiple projects{p_end}
 {synopt:{opt fold:er("folder path")}}save to folder location{p_end}
-{synopt:{opt obsid}}specify the variable that uniquely identifies each observation{p_end}
-{synopt:{opt enumid}}specify the variable that uniquely identifies each enumerator{p_end}
-{synopt:{opt teamid}}specify the variable that uniquely identifies each supervisor or enumerator{p_end}
+{synopt:{opt obsid(varname)}}specify the variable that uniquely identifies each observation{p_end}
+{synopt:{opt enumid(varname)}}specify the variable that uniquely identifies each enumerator{p_end}
+{synopt:{opt teamid(varname)}}specify the variable that uniquely identifies each supervisor or enumerator team{p_end}
 {p2colreset}{...}
 
 {marker update_options}
@@ -53,8 +53,7 @@ mata libraries, or displays the current version of ado files.
 {hline}
 
 {pstd}
-{cmd:ipacheck new} initializes a project's high frequency checks. It incluses options to
- create the folder structure, subfolders for multiple projects, and download inputs files.
+{cmd:ipacheck new} initializes a project's high frequency checks. It incluses options to create the folder structure and download inputs files.
  
 {title:Options for {it:ipacheck new}}
 
@@ -73,23 +72,16 @@ should be saved. If the {cmd:folder()} option is not specified, the default is t
 the folder structure and files in the current working directory.
 
 {phang}
-{cmd:subfolders} creates individual sub-folders for each survey form specified with 
-{cmd:surveys()} option. This option therefore can only be specified if multiple 
-survey forms are added with the {cmd:surveys()} option. This option also saves 
-input files will in each sub-folder. If {cmd:subfolders} is not specified, the default
-is to save all input files in the same checks folder. 
+{cmd:obsid(varname)} specifies the variable that uniquely identifies each observation. If the {cmd:obsid(var)} option is not specified, the default value
+for {cmd:obsid} is {cmd:uuid}.
 
 {phang}
-{cmd:filesonly} saves only the input files for high-frequency checks 
-(hfc_inputs.xlsm, corrections.xlsm, specifyrecode.xlsm, 0_master.do, 2_prep.do &
- 3_globals.do). These will be saved in the location specified in the {cmd:folder()} 
- option or the current working directory if {cmd:folder()} is not specified.
+{cmd:enumid(varname)} specifies the variable that uniquely identifies each enumerator. If the {cmd:enumid(var)} option is not specified, the default value
+for {cmd:enumid} is {cmd:enum_name}.
 
 {phang}
-{cmd:exercise} generates the folder structure and populates input files and an 
-exercise dataset for completing exercise. These will be saved in the location 
-specified in the {cmd:folder()} option or the current working directory if 
-{cmd:folder()} is not specified.
+{cmd:teamid(varname)} specifies the variable that uniquely identifies each enumerator. If the {cmd:teamid(var)} option is not specified, the default value
+for {cmd:teamid} is {cmd:team}.
 
 {phang}
 {cmd:branch("branchname")} specifies the branch from the github repository to 
@@ -122,35 +114,15 @@ ipacheck package.
 {title:Examples} 
 
 {phang}
-{txt}Setting up new HFC folder for a project with two forms (Adult and Household) and with sub-folders for running individual checks on each form{p_end}
+{txt}Setting up new HFC folder for a project with one form (Household) and specifying ID variables form{p_end}
 
-{phang}{com}. ipacheck new, surveys(Household Adult) folder("My project") subfolders{p_end}
-
-{phang}
-{txt}Setting up new HFC folder for a project with two forms (Adult and Household) with files for checks of these forms in same location{p_end}
-
-{phang}{com}. ipacheck new, surveys(Household Adult) folder("My project"){p_end}
-
-{phang}
-{txt}Setting up new HFC folder for a project with one single form{p_end}
-
-{phang}{com}. ipacheck new, folder("My project"){p_end}
-
-{phang}
-{txt}Saving only input files for a project without generating a HFC folder{p_end}
-
-{phang}{com}. ipacheck new, folder("My project") files {p_end}
-
-{phang}
-{txt}Learning how data flow works by running exercise {p_end}
-
-{phang}{com}. ipacheck new, folder("Exercise Project") exercise {p_end}
-{txt}
+{phang}{com}. ipacheck new, surveys(Household) folder("My project") obsid(hh_id)
+enumid(enum_id) teamid(team_id)
 
 {title:Remarks}
 
 {pstd}All files and source code for the {cmd:ipacheck} package can found
-{browse "https://github.com/PovertyAction/high-frequency-checks":here} on Github. 
+{browse "https://github.com/matteoram/high-frequency-checks":here} on Github. 
 The {cmd:ipacheck} package contains the following commands:
 
 {synoptset 30 tabbed}{...}
@@ -213,3 +185,7 @@ versions of which were authored by:
 {pstd}Ishmail Azindoo Baako, GRDS, Innovations for Poverty Action{p_end}
 {pstd}Rosemarie Sandino, GRDS, Innovations for Poverty Action{p_end}
 {pstd}{it:Last updated: October 17, 2022 (v4.1.0)}{p_end}
+
+{title:Modified by}
+
+{pstd}{browse "https://github.com/matteoram":Matteo Ramina}{p_end}

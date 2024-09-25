@@ -39,7 +39,7 @@ Create statistics or missingness and distinctness of variables.
 distinctness for specified variables in varlist. If this command is used as part of 
 the IPA Data Management System, it will be imporatant to note that IPA's Data Management 
 System changes values to missing as specified in the globals do-file sheet 
-(i.e. -999 = .d), which will also be considered missing in this check. 
+(i.e. -999 = .d), which will also be considered missing in this check. By default, variables are sorted in descending order based on percentage of missing values that are missing.
 
 {title:Options}
 
@@ -64,10 +64,8 @@ which will show statistics for all variables. {cmd:show()} can be specified as
 show(5) or show(10%).
 
 {pstd}
-{opth priority(varlist)} option specifies variables to prioritize in the outputs. 
-If specified, these variables will be sorted to the top of the output. 
-By default, variables are sorted in descending order based on percentage of missing
-values that are missing.
+{opth dropvars(varlist)} option specifies variables to drop in the outputs. 
+If specified, these variables will be dropped from the output. 
 
 {pstd}
 {opt sheetmodify} specifies that the output sheet should only be modified 
@@ -83,7 +81,7 @@ it already exist.
 {cmd:ipacheckmissing} is one of the checks run in IPA's Data Management System. 
 It can be run within IPA's Data Management System, where inputs are entered into a globals do-file 
 and outputs are formatted in a .xlsx file or used directly from the command window 
-or other do-files. See {help ipacheck} for more details on how to use the Data Management System.
+or other do-files. See {help ipacheck} for more details on how to use the Data Management System. The check has been enhanced by automatically dropping SurveyCTO’s standard variables and by simplifying the output.
 
 {title:Examples}
 
@@ -116,3 +114,7 @@ or e-mail researchsupport@poverty-action.org.{p_end}
 {title:Also see}
 
 Help: {helpb misstable:[R] misstable}
+
+{title:Modified by}
+
+{pstd}{browse "https://github.com/matteoram":Matteo Ramina}{p_end}
