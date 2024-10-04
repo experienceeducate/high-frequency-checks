@@ -71,7 +71,7 @@ program ipacheckoutliers, rclass
 			frame frm_inputs: replace variable = "`var'" in `i'
 			local i = `i' + 1
 		}
-		frame frm_inputs: replace by = "enum_name"
+		frame frm_inputs: replace by = $enum
 		frame frm_inputs: replace method = "sd"
 		frame frm_inputs: replace multiplier = 3		
 
