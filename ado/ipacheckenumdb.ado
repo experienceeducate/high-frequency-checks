@@ -260,7 +260,7 @@ program ipacheckenumdb, rclass
 		local total_weighted_duration = r(sum)
 		local overall_mean_duration = `total_weighted_duration' / `total_submissions'
 		set obs `=_N + 1'
-		replace enum_name = "Overall" if _n == _N
+		replace $enum = "Overall" if _n == _N
 		replace submissions = `total_submissions' if _n == _N
 		replace duration_mean = `overall_mean_duration' if _n == _N
 		replace duration_median = `overall_duration_median' if _n == _N
