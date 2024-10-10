@@ -258,7 +258,8 @@ program define ipacheck_new
 				"1_instruments/3_scto_xls"
 			"2_dofiles"
 			"3_checks"	
-			"4_data""
+			"4_data"
+			"5_corrections"
 			;
 		#d cr
 		
@@ -355,6 +356,16 @@ program define ipacheck_new
 	file close master_new
 	copy "`exp_dir'/0_master_tmp.do" "`exp_dir'/0_master.do", replace
 	erase "`exp_dir'/0_master_tmp.do"
+	
+	* Copy corrections file
+	cap confirm file "`exp_dir'/5_corrections/corrections.xlsm"
+	if _rc == 601 {
+		qui copy "`url'/`branch'/excel/templates/corrections.xlsm" "`exp_dir'/5_corrections/corrections.xlsm"
+		noi disp "corrections.xlsm copied to `exp_dir'/5_corrections/"
+	}
+	else {
+		noi disp "{red:Skipped}: File corrections.xlsm already exists"
+	}
 	
 	if "`filesonly'" == "" 	loc exp_dir "`folder'/2_dofiles"
 	else 					loc exp_dir "`folder'"
