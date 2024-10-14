@@ -259,7 +259,7 @@ program define ipacheck_new
 			"2_dofiles"
 			"3_checks"	
 			"4_data"
-			"5_corrections"
+			"5_corrections""
 			;
 		#d cr
 		
