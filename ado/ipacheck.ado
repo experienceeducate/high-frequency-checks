@@ -74,7 +74,7 @@ program ipacheck, rclass
 		}
 		
 		
-		loc url 	= "https://raw.githubusercontent.com/matteoram/high-frequency-checks"
+		loc url 	= "https://raw.githubusercontent.com/experienceeducate/high-frequency-checks"
 
 		if "`subcmd'" == "new" {
 			noi ipacheck_new, surveys(`surveys') folder("`folder'") obsid(`obsid') enumid(`enumid') teamid(`teamid') consentvar(`consentvar') `subfolders' `filesonly' url("`url'") branch(`branch') `exercise'
@@ -100,7 +100,7 @@ program define ipacheck_update
 		loc branch 	= cond("`branch'" ~= "", "`branch'", "master")
 		noi net install ipacheck, replace from("`url'/`branch'")
 
-		noi net install ipahelper, all replace from("https://raw.githubusercontent.com/matteoram/ipahelper/main")
+		noi net install ipahelper, all replace from("https://raw.githubusercontent.com/experienceeducate/ipahelper/main")
 	}
 	
 end
