@@ -106,7 +106,7 @@ program ipacheckids, rclass
 			ipacolwidth  using "`outfile'", sheet("`outsheet'")
 			ipacolformat using "`outfile'", sheet("`outsheet'") vars(`tmv_perc_diffs') format("percent_d2")	
 			ipacolformat using "`outfile'", sheet("`outsheet'") vars(`tmv_diffs' `tmv_compared') format("number_sep")
-			ipacolformat using "`outfile'", sheet("`outsheet'") vars(`date') format("date_d_mon_yy")	
+			cap ipacolformat using "`outfile'", sheet("`outsheet'") vars(`date') format("date_d_mon_yy")		
 			iparowformat using "`outfile'", sheet("`outsheet'") type(header)
 			
 			* get row numbers for seperator line
